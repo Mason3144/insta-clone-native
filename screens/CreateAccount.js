@@ -17,11 +17,11 @@ const CreateAccount = () => {
     console.log(data);
   };
   useEffect(() => {
-    register("firstName");
-    register("lastName");
-    register("username");
-    register("email");
-    register("password");
+    register("firstName", { requrired: true });
+    register("lastName", { requrired: true });
+    register("username", { requrired: true });
+    register("email", { requrired: true });
+    register("password", { requrired: true });
   }, [register]);
 
   return (
@@ -80,6 +80,7 @@ const CreateAccount = () => {
         text="Create Account"
         disabled={false}
         placeholderTextColor={"rgba(255,255,255,0.5)"}
+        loading={false}
         onPress={handleSubmit(onValid)}
       />
     </AuthLayout>
