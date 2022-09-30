@@ -1,9 +1,11 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import AuthButton from "../components/auth/AuthButton";
 import AuthLayout from "../components/auth/AuthLayout";
 import { TextInput } from "../components/auth/AythShared";
+import { useForm } from "react-hook-form";
 
 const CreateAccount = () => {
+  const { register, handleSubmit, setValue } = useForm();
   const lastNameRef = useRef();
   const usernameRef = useRef();
   const emailRef = useRef();
@@ -11,9 +13,17 @@ const CreateAccount = () => {
   const onNext = (next) => {
     next?.current?.focus();
   };
-  const onDone = () => {
-    alert("done");
+  const onValid = (data) => {
+    console.log(data);
   };
+  useEffect(() => {
+    register("firstName");
+    register("lastName");
+    register("username");
+    register("email");
+    register("password");
+  }, [register]);
+
   return (
     <AuthLayout>
       <TextInput
@@ -23,6 +33,7 @@ const CreateAccount = () => {
         onSubmitEditing={() => onNext(lastNameRef)}
         blurOnSubmit={false}
         placeholderTextColor={"rgba(255,255,255,0.5)"}
+        onChangeText={(text) => setValue("firstName", text)}
       />
       <TextInput
         placeholder="Last Name"
@@ -31,39 +42,45 @@ const CreateAccount = () => {
         onSubmitEditing={() => onNext(usernameRef)}
         blurOnSubmit={false}
         placeholderTextColor={"rgba(255,255,255,0.5)"}
+        onChangeText={(text) => setValue("lastName", text)}
       />
       <TextInput
         placeholder="Username"
         ref={usernameRef}
+        autoCapitalize="none"
         returnKeyType="next"
         onSubmitEditing={() => onNext(emailRef)}
         blurOnSubmit={false}
         placeholderTextColor={"rgba(255,255,255,0.5)"}
+        onChangeText={(text) => setValue("username", text)}
       />
       <TextInput
         placeholder="Email"
         ref={emailRef}
+        autoCapitalize="none"
         keyboardType="email-address"
         returnKeyType="next"
         onSubmitEditing={() => onNext(passwordRef)}
         blurOnSubmit={false}
         placeholderTextColor={"rgba(255,255,255,0.5)"}
+        onChangeText={(text) => setValue("email", text)}
       />
       <TextInput
         placeholder="Password"
         ref={passwordRef}
         secureTextEntry
         returnKeyType="done"
-        onSubmitEditing={onDone}
         blurOnSubmit={false}
         placeholderTextColor={"rgba(255,255,255,0.5)"}
         lastOne={true}
+        onChangeText={(text) => setValue("password", text)}
+        onSubmitEditing={handleSubmit(onValid)}
       />
       <AuthButton
         text="Create Account"
-        disabled={true}
+        disabled={false}
         placeholderTextColor={"rgba(255,255,255,0.5)"}
-        onPress={() => null}
+        onPress={handleSubmit(onValid)}
       />
     </AuthLayout>
   );
