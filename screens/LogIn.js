@@ -4,7 +4,7 @@ import AuthLayout from "../components/auth/AuthLayout";
 import { TextInput } from "../components/auth/AythShared";
 import { useForm } from "react-hook-form";
 import { gql, useMutation, useReactiveVar } from "@apollo/client";
-import { isLoggedInVar } from "../apollo";
+import { isLoggedInVar, logUserIn } from "../apollo";
 import { Alert } from "react-native";
 
 const LOGIN_MUTATION = gql`
@@ -25,13 +25,13 @@ const LogIn = ({ route: { params } }) => {
     },
   });
   const passwordRef = useRef();
-  const onCompleted = ({ login }) => {
+  const onCompleted = async ({ login }) => {
     const { ok, token, error } = login;
     if (!ok) {
       Alert.alert("Error", error);
     }
     if (ok) {
-      isLoggedInVar(true);
+      await logUserIn(token);
     }
   };
   const [logInMutation, { loading }] = useMutation(LOGIN_MUTATION, {
