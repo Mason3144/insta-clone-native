@@ -3,9 +3,45 @@ import AuthButton from "../components/auth/AuthButton";
 import AuthLayout from "../components/auth/AuthLayout";
 import { TextInput } from "../components/auth/AythShared";
 import { useForm } from "react-hook-form";
+import { gql, useMutation } from "@apollo/client";
+import { Alert } from "react-native";
 
-const CreateAccount = () => {
-  const { register, handleSubmit, setValue } = useForm();
+const CREATE_ACCOUNT_MUTATION = gql`
+  mutation createAccount(
+    $firstName: String!
+    $username: String!
+    $email: String!
+    $password: String!
+    $lastName: String
+  ) {
+    createAccount(
+      firstName: $firstName
+      username: $username
+      email: $email
+      password: $password
+      lastName: $lastName
+    ) {
+      ok
+      error
+    }
+  }
+`;
+
+const CreateAccount = ({ navigation }) => {
+  const { register, handleSubmit, setValue, watch, getValues } = useForm();
+  const onCompleted = ({ createAccount }) => {
+    const { ok, error } = createAccount;
+    const { username, password } = getValues();
+    if (!ok) {
+      Alert.alert("Error", error);
+    }
+    if (ok) {
+      navigation.navigate("LogIn", {
+        username,
+        password,
+      });
+    }
+  };
   const lastNameRef = useRef();
   const usernameRef = useRef();
   const emailRef = useRef();
@@ -13,9 +49,20 @@ const CreateAccount = () => {
   const onNext = (next) => {
     next?.current?.focus();
   };
+
   const onValid = (data) => {
-    console.log(data);
+    if (!loading) {
+      createAccountMutation({
+        variables: {
+          ...data,
+        },
+      });
+    }
   };
+  const [createAccountMutation, { loading }] = useMutation(
+    CREATE_ACCOUNT_MUTATION,
+    { onCompleted }
+  );
   useEffect(() => {
     register("firstName", { requrired: true });
     register("lastName", { requrired: true });
@@ -78,9 +125,15 @@ const CreateAccount = () => {
       />
       <AuthButton
         text="Create Account"
-        disabled={false}
+        disabled={
+          !watch("username") ||
+          !watch("password") ||
+          !watch("firstName") ||
+          !watch("lastName") ||
+          !watch("email")
+        }
+        loading={loading}
         placeholderTextColor={"rgba(255,255,255,0.5)"}
-        loading={false}
         onPress={handleSubmit(onValid)}
       />
     </AuthLayout>

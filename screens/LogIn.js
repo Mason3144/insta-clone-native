@@ -5,6 +5,7 @@ import { TextInput } from "../components/auth/AythShared";
 import { useForm } from "react-hook-form";
 import { gql, useMutation, useReactiveVar } from "@apollo/client";
 import { isLoggedInVar } from "../apollo";
+import { Alert } from "react-native";
 
 const LOGIN_MUTATION = gql`
   mutation Login($username: String!, $password: String!) {
@@ -16,11 +17,19 @@ const LOGIN_MUTATION = gql`
   }
 `;
 
-const LogIn = () => {
-  const { register, handleSubmit, setValue, watch } = useForm();
+const LogIn = ({ route: { params } }) => {
+  const { register, handleSubmit, setValue, watch } = useForm({
+    defaultValues: {
+      username: params?.username,
+      password: params?.password,
+    },
+  });
   const passwordRef = useRef();
   const onCompleted = ({ login }) => {
-    const { ok, token } = login;
+    const { ok, token, error } = login;
+    if (!ok) {
+      Alert.alert("Error", error);
+    }
     if (ok) {
       isLoggedInVar(true);
     }
@@ -47,6 +56,7 @@ const LogIn = () => {
   return (
     <AuthLayout>
       <TextInput
+        value={watch("username")}
         placeholder="Username"
         returnKeyType="next"
         autoCapitalize="none"
@@ -56,6 +66,7 @@ const LogIn = () => {
         onChangeText={(text) => setValue("username", text)}
       />
       <TextInput
+        value={watch("password")}
         placeholder="Password"
         ref={passwordRef}
         secureTextEntry
