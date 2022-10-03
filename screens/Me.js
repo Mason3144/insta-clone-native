@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, View } from "react-native";
 
-export default Profile = () => {
+export default Me = () => {
   return (
     <View
       style={{
@@ -11,7 +11,7 @@ export default Profile = () => {
         justifyContent: "center",
       }}
     >
-      <Text style={{ color: "white" }}>Someones Profile</Text>
+      <Text style={{ color: "white" }}>Me</Text>
     </View>
   );
 };
