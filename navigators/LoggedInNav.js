@@ -4,6 +4,8 @@ import Feed from "../screens/Feed";
 import Search from "../screens/Search";
 import Notifications from "../screens/Notifications";
 import Profile from "../screens/Profile";
+import { View } from "react-native";
+import TabIcon from "../components/nav/TabIcon";
 import { Ionicons } from "@expo/vector-icons";
 
 const Tabs = createBottomTabNavigator();
@@ -26,7 +28,7 @@ const LoggedInNav = () => {
         component={Feed}
         options={{
           tabBarIcon: ({ focused, color, size }) => (
-            <Ionicons name="home" color={color} size={focused ? 24 : 20} />
+            <TabIcon color={color} iconName={"home"} focused={focused} />
           ),
         }}
       />
@@ -35,7 +37,16 @@ const LoggedInNav = () => {
         component={Search}
         options={{
           tabBarIcon: ({ focused, color, size }) => (
-            <Ionicons name="search" color={color} size={focused ? 24 : 20} />
+            <TabIcon color={color} iconName={"search"} focused={focused} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="Camera"
+        component={View}
+        options={{
+          tabBarIcon: ({ focused, color, size }) => (
+            <TabIcon color={color} iconName={"camera"} focused={focused} />
           ),
         }}
       />
@@ -44,7 +55,7 @@ const LoggedInNav = () => {
         component={Notifications}
         options={{
           tabBarIcon: ({ focused, color, size }) => (
-            <Ionicons name="heart" color={color} size={focused ? 24 : 20} />
+            <TabIcon color={color} iconName={"heart"} focused={focused} />
           ),
         }}
       />
@@ -53,7 +64,7 @@ const LoggedInNav = () => {
         component={Profile}
         options={{
           tabBarIcon: ({ focused, color, size }) => (
-            <Ionicons name="person" color={color} size={focused ? 24 : 20} />
+            <TabIcon color={color} iconName={"person"} focused={focused} />
           ),
         }}
       />
