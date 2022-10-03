@@ -6,14 +6,36 @@ import Feed from "../../screens/Feed";
 import Search from "../../screens/Search";
 import Me from "../../screens/Me";
 import Notifications from "../../screens/Notifications";
+import { Image } from "react-native";
 
 const Stack = createNativeStackNavigator();
 
 export default function StackNavFactory({ screenName }) {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        headerTransparent: true,
+        headerTintColor: "white",
+        headerBackTitleVisible: false,
+      }}
+    >
       {screenName === "Feed" ? (
-        <Stack.Screen name={"Feed"} component={Feed} />
+        <Stack.Screen
+          name={"Feed"}
+          component={Feed}
+          options={{
+            headerTitle: () => (
+              <Image
+                style={{
+                  maxHeight: 50,
+                  maxWidth: 150,
+                }}
+                resizeMode="contain"
+                source={require("../../assets/logo.png")}
+              />
+            ),
+          }}
+        />
       ) : null}
       {screenName === "Search" ? (
         <Stack.Screen name={"Search"} component={Search} />
