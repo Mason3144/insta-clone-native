@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 
 export default Me = () => {
   return (
@@ -12,6 +12,9 @@ export default Me = () => {
       }}
     >
       <Text style={{ color: "white" }}>Me</Text>
+      <TouchableOpacity onPress={() => logUserOut()}>
+        <Text style={{ color: "white" }}>logout</Text>
+      </TouchableOpacity>
     </View>
   );
 };

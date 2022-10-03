@@ -14,7 +14,7 @@ export default function StackNavFactory({ screenName }) {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerTransparent: true,
+        headerStyle: { backgroundColor: "black" },
         headerTintColor: "white",
         headerBackTitleVisible: false,
       }}
