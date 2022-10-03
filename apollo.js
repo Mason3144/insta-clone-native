@@ -14,7 +14,7 @@ export const logUserIn = async (token) => {
 };
 
 const client = new ApolloClient({
-  uri: `https://icy-animals-change-175-211-17-8.loca.lt/graphql`,
+  uri: `https://violet-years-look-175-211-17-8.loca.lt/graphql`,
   cache: new InMemoryCache(),
 });
 
