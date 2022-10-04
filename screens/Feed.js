@@ -1,8 +1,8 @@
-import { gql, useLazyQuery, useQuery } from "@apollo/client";
+import { gql, useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useState } from "react";
 import { FlatList, RefreshControl } from "react-native";
-import Photo from "../components/Photo";
+import FeedPhoto from "../components/FeedPhoto";
 import ScreenLayout from "../components/ScreenLayout";
 import { COMMENT_FRAGMENT, PHOTO_FRAGMENT } from "../fragments";
 
@@ -32,8 +32,9 @@ export default FEED = ({ navigation }) => {
       offset: 0,
     },
   });
+
   const renderPhoto = ({ item: photo }) => {
-    return <Photo {...photo}></Photo>;
+    return <FeedPhoto {...photo}></FeedPhoto>;
   };
 
   const refresh = async () => {
@@ -44,7 +45,7 @@ export default FEED = ({ navigation }) => {
   return (
     <ScreenLayout loading={loading}>
       <FlatList
-        onEndReachedThreshold={0}
+        onEndReachedThreshold={0.02}
         onEndReached={() =>
           fetchMore({
             variables: {

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { Image, TouchableOpacity, useWindowDimensions } from "react-native";
 import styled from "styled-components/native";
+import { gql, useMutation } from "@apollo/client";
 
 const Container = styled.View``;
 const Header = styled.TouchableOpacity`
@@ -46,7 +47,15 @@ const ExtraContainer = styled.View`
   padding: 10px;
 `;
 
-export default function Photo({ id, user, caption, file, isLiked, likes }) {
+const TOGGLE_LIKE_MUTATION = gql`
+  mutation toggleLike($id: Int!) {
+    toggleLike(id: $id) {
+      ok
+      error
+    }
+  }
+`;
+export default function FeedPhoto({ id, user, caption, file, isLiked, likes }) {
   const navigation = useNavigation();
   const { width, height } = useWindowDimensions();
   const [imageHeight, setImageHeight] = useState(height - 450);
@@ -55,6 +64,32 @@ export default function Photo({ id, user, caption, file, isLiked, likes }) {
       setImageHeight(height / 3);
     });
   }, [file]);
+
+  const updateToggleLike = (cache, { data }) => {
+    const {
+      toggleLike: { ok },
+    } = data;
+    if (ok) {
+      const photoId = `Photo:${id}`;
+      cache.modify({
+        id: photoId,
+        fields: {
+          isLiked(prev) {
+            return !prev;
+          },
+          likes(prev) {
+            return isLiked ? prev - 1 : prev + 1;
+          },
+        },
+      });
+    }
+  };
+  const [toggleLikeMutation] = useMutation(TOGGLE_LIKE_MUTATION, {
+    variables: {
+      id,
+    },
+    update: updateToggleLike,
+  });
   return (
     <Container>
       <Header onPress={() => navigation.navigate("Profile")}>
@@ -68,7 +103,7 @@ export default function Photo({ id, user, caption, file, isLiked, likes }) {
       />
       <ExtraContainer>
         <Actions>
-          <Action>
+          <Action onPress={() => toggleLikeMutation()}>
             <Ionicons
               name={isLiked ? "heart" : "heart-outline"}
               color={isLiked ? "tomato" : "white"}
