@@ -1,23 +1,14 @@
-import { gql, useQuery } from "@apollo/client";
+import { gql, useLazyQuery, useQuery } from "@apollo/client";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useState } from "react";
-import {
-  ActivityIndicator,
-  FlatList,
-  RefreshControl,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import styled from "styled-components";
-import { logUserOut } from "../apollo";
+import { FlatList, RefreshControl } from "react-native";
 import Photo from "../components/Photo";
 import ScreenLayout from "../components/ScreenLayout";
 import { COMMENT_FRAGMENT, PHOTO_FRAGMENT } from "../fragments";
 
 const FEED_QUERY = gql`
-  query seeFeed {
-    seeFeed {
+  query seeFeed($offset: Int!) {
+    seeFeed(offset: $offset) {
       user {
         username
         avatar
@@ -36,20 +27,31 @@ const FEED_QUERY = gql`
 `;
 
 export default FEED = ({ navigation }) => {
-  const { data, loading, refetch } = useQuery(FEED_QUERY);
+  const { data, loading, refetch, fetchMore } = useQuery(FEED_QUERY, {
+    variables: {
+      offset: 0,
+    },
+  });
   const renderPhoto = ({ item: photo }) => {
     return <Photo {...photo}></Photo>;
   };
 
   const refresh = async () => {
     setRefreshing(true);
-    await refetch();
-    setRefreshing(false);
+    await refetch().finally(() => setRefreshing(false));
   };
   const [refreshing, setRefreshing] = useState(false);
   return (
     <ScreenLayout loading={loading}>
       <FlatList
+        onEndReachedThreshold={0}
+        onEndReached={() =>
+          fetchMore({
+            variables: {
+              offset: data?.seeFeed?.length,
+            },
+          })
+        }
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
