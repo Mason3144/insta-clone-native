@@ -25,7 +25,7 @@ export const logUserOut = async () => {
 };
 
 const httpLink = createHttpLink({
-  uri: `https://violet-years-look-175-211-17-8.loca.lt/graphql`,
+  uri: `https://cool-eagles-slide-175-211-17-8.loca.lt/graphql`,
 });
 
 const authLink = setContext((_, { headers }) => {
