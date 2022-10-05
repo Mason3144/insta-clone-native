@@ -41,10 +41,11 @@ const FollowBtnText = styled.Text`
   color: white;
 `;
 
-export default function UserRow({ avatar, username, isFollowing, isMe }) {
+export default function UserRow({ avatar, username, id, isFollowing, isMe }) {
+  const navigation = useNavigation();
   return (
     <Wrapper>
-      <Column onPress={() => navigation.navigate("Profile")}>
+      <Column onPress={() => navigation.navigate("Profile", { username, id })}>
         <Avatar source={{ uri: avatar }} />
         <Username>{username}</Username>
       </Column>

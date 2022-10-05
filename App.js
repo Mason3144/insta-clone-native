@@ -35,6 +35,7 @@ export default function App() {
     await persistCache({
       cache,
       storage: new AsyncStorageWrapper(AsyncStorage),
+      serialize: false,
     });
     return preloadAssets();
   };
