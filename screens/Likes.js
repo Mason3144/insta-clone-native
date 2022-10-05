@@ -21,7 +21,6 @@ export default Likes = ({ route }) => {
     },
     skip: !route?.params?.photoId,
   });
-
   const refresh = async () => {
     setRefreshing(true);
     await refetch().finally(() => setRefreshing(false));

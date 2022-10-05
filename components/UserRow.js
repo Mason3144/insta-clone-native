@@ -1,3 +1,4 @@
+import { gql, useMutation } from "@apollo/client";
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import styled from "styled-components/native";
@@ -41,8 +42,38 @@ const FollowBtnText = styled.Text`
   color: white;
 `;
 
+const FOLLOW_MUTATION = gql`
+  mutation followUser($username: String) {
+    followUser(username: $username) {
+      ok
+    }
+  }
+`;
+
 export default function UserRow({ avatar, username, id, isFollowing, isMe }) {
   const navigation = useNavigation();
+  const updateFollowers = (cache, { data }) => {
+    const {
+      followUser: { ok },
+    } = data;
+    if (ok) {
+      const userId = `User:${id}`;
+      cache.modify({
+        id: userId,
+        fields: {
+          isFollowing(prev) {
+            return !prev;
+          },
+        },
+      });
+    }
+  };
+  const [followUserMutation] = useMutation(FOLLOW_MUTATION, {
+    variables: {
+      username,
+    },
+    update: updateFollowers,
+  });
   return (
     <Wrapper>
       <Column onPress={() => navigation.navigate("Profile", { username, id })}>
@@ -50,7 +81,10 @@ export default function UserRow({ avatar, username, id, isFollowing, isMe }) {
         <Username>{username}</Username>
       </Column>
       {!isMe ? (
-        <FollowBtn isFollowing={isFollowing}>
+        <FollowBtn
+          isFollowing={isFollowing}
+          onPress={() => followUserMutation()}
+        >
           <FollowBtnText>{isFollowing ? "Unfollow" : "Follow"}</FollowBtnText>
         </FollowBtn>
       ) : null}

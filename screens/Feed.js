@@ -45,7 +45,7 @@ export default FEED = ({ navigation }) => {
   return (
     <ScreenLayout loading={loading}>
       <FlatList
-        onEndReachedThreshold={0.0}
+        onEndReachedThreshold={0.2}
         onEndReached={() =>
           fetchMore({
             variables: {

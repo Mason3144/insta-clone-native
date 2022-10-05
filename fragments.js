@@ -30,7 +30,7 @@ export const USER_FRAGMENT = gql`
     username
     email
     avatar
-    isMe
     isFollowing
+    isMe
   }
 `;
