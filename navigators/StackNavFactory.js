@@ -1,14 +1,14 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Profile from "../../screens/Profile";
-import Photo from "../../screens/Photo";
-import Feed from "../../screens/Feed";
-import Search from "../../screens/Search";
-import Me from "../../screens/Me";
-import Notifications from "../../screens/Notifications";
+import Profile from "../screens/Profile";
+import Photo from "../screens/Photo";
+import Feed from "../screens/Feed";
+import Search from "../screens/Search";
+import Me from "../screens/Me";
+import Notifications from "../screens/Notifications";
 import { Image } from "react-native";
-import Likes from "../../screens/Likes";
-import Comments from "../../screens/Comments";
+import Likes from "../screens/Likes";
+import Comments from "../screens/Comments";
 
 const Stack = createNativeStackNavigator();
 
@@ -33,7 +33,7 @@ export default function StackNavFactory({ screenName }) {
                   maxWidth: 150,
                 }}
                 resizeMode="contain"
-                source={require("../../assets/logo.png")}
+                source={require("../assets/logo.png")}
               />
             ),
           }}
@@ -48,7 +48,7 @@ export default function StackNavFactory({ screenName }) {
       {screenName === "Me" ? <Stack.Screen name={"Me"} component={Me} /> : null}
       <Stack.Screen name="Profile" component={Profile} />
       <Stack.Screen name="Photo" component={Photo} />
-      <Stack.Screen name="Likes" component={Likes} />
+      <Stack.Screen name={"Likes"} component={Likes} />
       <Stack.Screen name="Comments" component={Comments} />
     </Stack.Navigator>
   );

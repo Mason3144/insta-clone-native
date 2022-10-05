@@ -1,5 +1,4 @@
-import { gql, useLazyQuery, useMutation, useQuery } from "@apollo/client";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { gql, useQuery } from "@apollo/client";
 import React, { useState } from "react";
 import { FlatList, RefreshControl } from "react-native";
 import FeedPhoto from "../components/FeedPhoto";
@@ -10,6 +9,7 @@ const FEED_QUERY = gql`
   query seeFeed($offset: Int!) {
     seeFeed(offset: $offset) {
       user {
+        id
         username
         avatar
       }
@@ -45,7 +45,7 @@ export default FEED = ({ navigation }) => {
   return (
     <ScreenLayout loading={loading}>
       <FlatList
-        onEndReachedThreshold={0.02}
+        onEndReachedThreshold={0.0}
         onEndReached={() =>
           fetchMore({
             variables: {
