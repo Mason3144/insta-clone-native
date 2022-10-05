@@ -1,7 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Text, View } from "react-native";
 
-export default Profile = () => {
+export default Profile = ({ navigation, route }) => {
+  useEffect(() => {
+    navigation.setOptions({
+      title: route?.params?.username,
+    });
+  });
   return (
     <View
       style={{
