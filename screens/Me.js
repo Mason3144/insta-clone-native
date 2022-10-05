@@ -1,8 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { logUserOut } from "../apollo";
+import useMe from "../hooks/useMe";
 
-export default Me = () => {
+export default Me = ({ navigation }) => {
+  const { data } = useMe();
+  useEffect(() => {
+    navigation.setOptions({
+      title: data?.me?.username,
+    });
+  });
   return (
     <View
       style={{
