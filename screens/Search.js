@@ -3,6 +3,8 @@ import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import {
   ActivityIndicator,
+  FlatList,
+  Image,
   Text,
   TextInput,
   TouchableOpacity,
@@ -41,6 +43,7 @@ const Input = styled.TextInput`
 `;
 
 export default Search = ({ navigation }) => {
+  const numColumns = 4;
   const { width } = useWindowDimensions();
   const { setValue, register, watch, handleSubmit } = useForm();
   const [startQueryFn, { loading, data, called }] = useLazyQuery(SEARCH_PHOTOS);
@@ -71,6 +74,14 @@ export default Search = ({ navigation }) => {
       minLength: 3,
     });
   }, []);
+  const renderItem = ({ item: photo }) => (
+    <TouchableOpacity>
+      <Image
+        source={{ uri: photo.file }}
+        style={{ width: width / numColumns, height: 100 }}
+      />
+    </TouchableOpacity>
+  );
   return (
     <DismissKeyboard>
       <View style={{ flex: 1, backgroundColor: "black" }}>
@@ -90,6 +101,14 @@ export default Search = ({ navigation }) => {
           <MessageContainer>
             <MessageText>Could not find anything.</MessageText>
           </MessageContainer>
+        ) : null}
+        {data?.searchPhoto !== undefined && data?.searchPhoto?.length !== 0 ? (
+          <FlatList
+            numColumns={numColumns}
+            data={data?.searchPhoto}
+            keyExtractor={(photo) => "" + photo.id}
+            renderItem={renderItem}
+          />
         ) : null}
       </View>
     </DismissKeyboard>
