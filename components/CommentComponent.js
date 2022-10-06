@@ -1,12 +1,20 @@
 import React from "react";
-import { Alert, TouchableOpacity, View } from "react-native";
+import {
+  Alert,
+  KeyboardAvoidingView,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { gql, useMutation } from "@apollo/client";
 import styled from "styled-components";
 import { useNavigation } from "@react-navigation/native";
-//cashe and mutation
-//keyboard dismiss, tab on outside
-//textinput and keyboard dismiss, tab on outside
+import { colors } from "../colors";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+
 const Container = styled.View`
   flex-direction: row;
   margin-bottom: 10px;
@@ -32,6 +40,14 @@ const Payload = styled.Text`
   color: white;
 `;
 
+const Input = styled.TextInput`
+  background-color: rgba(255, 255, 255, 1);
+  color: black;
+  width: 70%;
+  padding: 5px 10px;
+  border-radius: 10px;
+`;
+
 const DELETECOMMENT_MUTATION = gql`
   mutation deleteComment($id: Int!) {
     deleteComment(id: $id) {
@@ -40,7 +56,7 @@ const DELETECOMMENT_MUTATION = gql`
   }
 `;
 
-export default function DeleteComment({
+export default function CommentComponent({
   id,
   user,
   payload,

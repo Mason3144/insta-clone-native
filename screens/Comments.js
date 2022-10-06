@@ -1,21 +1,16 @@
 import { gql, useQuery } from "@apollo/client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
-  RefreshControl,
-  ScrollView,
-  Text,
-  TouchableOpacity,
+  KeyboardAvoidingView,
   View,
 } from "react-native";
-import styled from "styled-components";
-import ScreenLayout from "../components/ScreenLayout";
 import { COMMENT_FRAGMENT } from "../fragments";
-
-import { useNavigation } from "@react-navigation/native";
-import deleteComment from "../components/DeleteComment";
-import DeleteComment from "../components/DeleteComment";
+import CommentComponent from "../components/CommentComponent";
+import styled from "styled-components";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import WriteComment from "../components/WriteComment";
 
 const SEEPHOTOCOMMENTS_QUERY = gql`
   query seePhotoComments($photoId: Int!) {
@@ -33,29 +28,32 @@ export default Comments = ({ route }) => {
     },
     skip: !route?.params?.photoId,
   });
-  const refresh = async () => {
-    setRefreshing(true);
-    await refetch().finally(() => setRefreshing(false));
-  };
-  const [refreshing, setRefreshing] = useState(false);
+
   return (
-    <View style={{ backgroundColor: "black", flex: 1, padding: 20 }}>
+    <View
+      style={{
+        backgroundColor: "black",
+        flex: 1,
+        padding: 20,
+      }}
+    >
       {loading ? (
         <ActivityIndicator color="white" />
       ) : (
-        <FlatList
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={refresh}
-              tintColor="white"
-              color="white"
-            />
-          }
-          data={data?.seePhotoComments}
-          keyExtractor={(comment) => "" + comment.id}
-          renderItem={({ item: comment }) => <DeleteComment {...comment} />}
-        />
+        <KeyboardAvoidingView
+          style={{ width: "100%" }}
+          behavior="padding"
+          keyboardVerticalOffset={Platform.OS === "ios" ? 160 : 0}
+        >
+          <FlatList
+            data={data?.seePhotoComments}
+            keyExtractor={(comment) => "" + comment.id}
+            renderItem={({ item: comment }) => (
+              <CommentComponent {...comment} />
+            )}
+          />
+          <WriteComment photoId={route?.params?.photoId} />
+        </KeyboardAvoidingView>
       )}
     </View>
   );
