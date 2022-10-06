@@ -1,10 +1,11 @@
 import { gql, useLazyQuery } from "@apollo/client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   ActivityIndicator,
   FlatList,
   Image,
+  RefreshControl,
   Text,
   TextInput,
   TouchableOpacity,
@@ -46,7 +47,8 @@ export default Search = ({ navigation }) => {
   const numColumns = 4;
   const { width } = useWindowDimensions();
   const { setValue, register, watch, handleSubmit } = useForm();
-  const [startQueryFn, { loading, data, called }] = useLazyQuery(SEARCH_PHOTOS);
+  const [startQueryFn, { loading, data, called, refetch }] =
+    useLazyQuery(SEARCH_PHOTOS);
   const onValid = ({ keyword }) => {
     startQueryFn({
       variables: {
@@ -74,6 +76,7 @@ export default Search = ({ navigation }) => {
       minLength: 3,
     });
   }, []);
+
   const renderItem = ({ item: photo }) => (
     <TouchableOpacity>
       <Image
@@ -82,6 +85,12 @@ export default Search = ({ navigation }) => {
       />
     </TouchableOpacity>
   );
+
+  const refresh = async () => {
+    setRefreshing(true);
+    await refetch().finally(() => setRefreshing(false));
+  };
+  const [refreshing, setRefreshing] = useState(false);
   return (
     <DismissKeyboard>
       <View style={{ flex: 1, backgroundColor: "black" }}>
@@ -104,6 +113,14 @@ export default Search = ({ navigation }) => {
         ) : null}
         {data?.searchPhoto !== undefined && data?.searchPhoto?.length !== 0 ? (
           <FlatList
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={refresh}
+                tintColor="white"
+                color="white"
+              />
+            }
             numColumns={numColumns}
             data={data?.searchPhoto}
             keyExtractor={(photo) => "" + photo.id}
