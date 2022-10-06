@@ -6,9 +6,11 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  useWindowDimensions,
   View,
 } from "react-native";
 import styled from "styled-components";
+import { colors } from "../colors";
 import DismissKeyboard from "../components/DismissKeyboard";
 
 const SEARCH_PHOTOS = gql`
@@ -30,9 +32,16 @@ const MessageText = styled.Text`
   font-weight: 600;
 `;
 
-const Input = styled.TextInput``;
+const Input = styled.TextInput`
+  background-color: rgba(255, 255, 255, 1);
+  color: black;
+  width: ${(props) => props.width / 1.5};
+  padding: 5px 10px;
+  border-radius: 10px;
+`;
 
 export default Search = ({ navigation }) => {
+  const { width } = useWindowDimensions();
   const { setValue, register, watch, handleSubmit } = useForm();
   const [startQueryFn, { loading, data, called }] = useLazyQuery(SEARCH_PHOTOS);
   const onValid = ({ keyword }) => {
@@ -43,10 +52,11 @@ export default Search = ({ navigation }) => {
     });
   };
   const SearchBox = () => (
-    <TextInput
-      style={{ backgroundColor: "white" }}
-      placeholderTextColor="black"
+    <Input
+      width={width}
+      placeholderTextColor="rgba(0,0,0,0.8)"
       placeholder="Search Photos"
+      selectionColor={`${colors.blue}`}
       returnKeyLabel="Search"
       returnKeyType="search"
       autoCorrect={false}
