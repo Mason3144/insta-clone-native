@@ -55,7 +55,15 @@ const TOGGLE_LIKE_MUTATION = gql`
     }
   }
 `;
-export default function FeedPhoto({ id, user, caption, file, isLiked, likes }) {
+export default function FeedPhoto({
+  id,
+  user,
+  caption,
+  file,
+  isLiked,
+  likes,
+  fullView,
+}) {
   const navigation = useNavigation();
   const { width, height } = useWindowDimensions();
   const [imageHeight, setImageHeight] = useState(height - 450);

@@ -1,19 +1,67 @@
-import React from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { gql, useQuery } from "@apollo/client";
+import React, { useState } from "react";
+import {
+  RefreshControl,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import FeedPhoto from "../components/FeedPhoto";
+import { COMMENT_FRAGMENT, PHOTO_FRAGMENT } from "../fragments";
+import ScreenLayout from "../components/ScreenLayout";
 
-export default Photo = ({ navigation }) => {
+const SEEPHOTO_QUERY = gql`
+  query seePhoto($id: Int!) {
+    seePhoto(id: $id) {
+      user {
+        id
+        username
+        avatar
+      }
+      caption
+      createdAt
+      isMine
+      ...PhotoFragment
+      comments {
+        ...CommentFragment
+      }
+    }
+  }
+  ${COMMENT_FRAGMENT}
+  ${PHOTO_FRAGMENT}
+`;
+export default Photo = ({ route }) => {
+  const { data, loading, refetch } = useQuery(SEEPHOTO_QUERY, {
+    variables: {
+      id: route?.params?.photoId,
+    },
+  });
+  const refresh = async () => {
+    setRefreshing(true);
+    await refetch().finally(() => setRefreshing(false));
+  };
+  const [refreshing, setRefreshing] = useState(false);
   return (
-    <View
-      style={{
-        backgroundColor: "black",
-        flex: 1,
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
-        <Text style={{ color: "white" }}>Profile</Text>
-      </TouchableOpacity>
-    </View>
+    <ScreenLayout loading={loading}>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={refresh}
+            tintColor="white"
+            color="white"
+          />
+        }
+        style={{ backgroundColor: "black" }}
+        contentContainerStyle={{
+          backgroundColor: "black",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <FeedPhoto {...data?.seePhoto} />
+      </ScrollView>
+    </ScreenLayout>
   );
 };
