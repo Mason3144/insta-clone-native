@@ -17,9 +17,11 @@ export const COMMENT_FRAGMENT = gql`
     payload
     isMine
     createdAt
+    updatedAt
     user {
       username
       avatar
+      id
     }
   }
 `;

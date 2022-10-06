@@ -111,11 +111,15 @@ export default function FeedPhoto({
         <UserAvatar resizeMode="cover" source={{ uri: user?.avatar }} />
         <Username>{user?.username}</Username>
       </Header>
-      <File
-        resizeMode="contain"
-        style={{ width, height: imageHeight }}
-        source={{ uri: file }}
-      />
+      <TouchableOpacity
+        onPress={() => navigation.navigate("Photo", { photoId: id })}
+      >
+        <File
+          resizeMode="contain"
+          style={{ width, height: imageHeight }}
+          source={{ uri: file }}
+        />
+      </TouchableOpacity>
       <ExtraContainer>
         <Actions>
           <Action onPress={() => toggleLikeMutation()}>
@@ -125,7 +129,9 @@ export default function FeedPhoto({
               size={22}
             />
           </Action>
-          <Action onPress={() => navigation.navigate("Comments")}>
+          <Action
+            onPress={() => navigation.navigate("Comments", { photoId: id })}
+          >
             <Ionicons name="chatbubble-outline" color="white" size={22} />
           </Action>
         </Actions>
