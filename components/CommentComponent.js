@@ -105,7 +105,7 @@ export default function CommentComponent({
     if (hour >= 24) {
       return `${day}d ago`;
     } else {
-      return `${hour}h ago`;
+      return `${hour - 1}h ago`;
     }
   };
 

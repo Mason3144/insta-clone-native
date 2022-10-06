@@ -76,7 +76,7 @@ export default function UserRow({ avatar, username, id, isFollowing, isMe }) {
   });
   return (
     <Wrapper>
-      <Column onPress={() => navigation.navigate("Profile", { username, id })}>
+      <Column onPress={() => navigation.navigate("Me", { username, id })}>
         <Avatar source={{ uri: avatar }} />
         <Username>{username}</Username>
       </Column>

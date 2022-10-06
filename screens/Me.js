@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { logUserOut } from "../apollo";
+import HeaderRight from "../components/HeaderRight";
 import useMe from "../hooks/useMe";
 
 export default Me = ({ navigation }) => {
@@ -8,6 +9,7 @@ export default Me = ({ navigation }) => {
   useEffect(() => {
     navigation.setOptions({
       title: data?.me?.username,
+      headerRight: () => <HeaderRight userInfo={true} />,
     });
   });
   return (

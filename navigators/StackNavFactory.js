@@ -9,6 +9,7 @@ import Notifications from "../screens/Notifications";
 import { Image } from "react-native";
 import Likes from "../screens/Likes";
 import Comments from "../screens/Comments";
+import HeaderRight from "../components/HeaderRight";
 
 const Stack = createNativeStackNavigator();
 
