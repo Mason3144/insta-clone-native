@@ -39,8 +39,12 @@ const CaptionText = styled.Text`
 `;
 const Likes = styled.Text`
   color: white;
-  margin: 7px 0px;
+  margin: 7px 0px 2px 0px;
   font-weight: 600;
+`;
+const Comment = styled.Text`
+  color: white;
+  opacity: 0.7;
 `;
 
 const ExtraContainer = styled.View`
@@ -62,6 +66,7 @@ export default function FeedPhoto({
   file,
   isLiked,
   likes,
+  commentNumber,
   fullView,
 }) {
   const navigation = useNavigation();
@@ -140,6 +145,9 @@ export default function FeedPhoto({
         >
           <Likes>{likes === 1 ? "1 like" : `${likes} likes`}</Likes>
         </TouchableOpacity>
+        <Comment>
+          {commentNumber === 1 ? "1 comment" : `${commentNumber} comments`}
+        </Comment>
         <Caption>
           <TouchableOpacity onPress={() => goToProfile()}>
             <Username>{user?.username}</Username>

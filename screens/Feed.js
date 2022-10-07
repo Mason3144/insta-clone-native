@@ -8,6 +8,7 @@ import { COMMENT_FRAGMENT, PHOTO_FRAGMENT } from "../fragments";
 const FEED_QUERY = gql`
   query seeFeed($offset: Int!) {
     seeFeed(offset: $offset) {
+      commentNumber
       user {
         id
         username

@@ -54,7 +54,7 @@ const Edit = styled.Text`
   font-weight: 700;
   font-size: 18px;
 `;
-export default function ProfileUserInfo({ seeProfile }) {
+export default function ProfileUserInfo({ seeProfile, loading }) {
   const {
     firstName,
     lastName,
@@ -67,6 +67,7 @@ export default function ProfileUserInfo({ seeProfile }) {
     following,
     followers,
     isFollowing,
+    username,
   } = seeProfile;
   const navigation = useNavigation();
   return (
@@ -95,7 +96,11 @@ export default function ProfileUserInfo({ seeProfile }) {
           <NumberBox>
             <Touch
               onPress={() =>
-                navigation.navigate("ProfileFollowers", { followers })
+                navigation.navigate("ProfileFollowers", {
+                  followers,
+                  username,
+                  loading,
+                })
               }
             >
               <Number>{totalFollowers}</Number>
@@ -107,7 +112,7 @@ export default function ProfileUserInfo({ seeProfile }) {
           <NumberBox>
             <Touch
               onPress={() =>
-                navigation.navigate("ProfileFollowing", { following })
+                navigation.navigate("ProfileFollowing", { following, username })
               }
             >
               <Number>{totalFollowing}</Number>

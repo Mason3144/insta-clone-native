@@ -21,22 +21,10 @@ export default Likes = ({ route }) => {
     },
     skip: !route?.params?.photoId,
   });
-  const refresh = async () => {
-    setRefreshing(true);
-    await refetch().finally(() => setRefreshing(false));
-  };
-  const [refreshing, setRefreshing] = useState(false);
+  refetch();
   return (
     <ScreenLayout loading={loading}>
       <FlatList
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={refresh}
-            tintColor="white"
-            color="white"
-          />
-        }
         style={{ width: "100%" }}
         showsVerticalScrollIndicator={false}
         data={data?.seePhotoLikes}

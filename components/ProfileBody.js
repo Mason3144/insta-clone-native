@@ -39,11 +39,13 @@ const SEEPROFILE_QUERY = gql`
   }
 `;
 export default function ProfileBody({ ownerName }) {
-  const { data, loading } = useQuery(SEEPROFILE_QUERY, {
+  const { data, loading, refetch } = useQuery(SEEPROFILE_QUERY, {
     variables: {
       username: ownerName,
     },
+    skip: !ownerName,
   });
+  refetch();
   return (
     <View
       style={{
@@ -53,7 +55,7 @@ export default function ProfileBody({ ownerName }) {
     >
       {!loading ? (
         <View>
-          <ProfileUserInfo {...data} />
+          <ProfileUserInfo {...data} loading={loading} />
 
           <View>
             <ProfilePhoto {...data} />

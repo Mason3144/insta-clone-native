@@ -23,7 +23,6 @@ export default ProfilePhoto = ({ seeProfile }) => {
   const { width } = useWindowDimensions();
   const { photos } = seeProfile;
 
-  console.log(photos);
   const renderItem = ({ item: photo }) => (
     <TouchableOpacity
       onPress={() => navigation.navigate("Photo", { photoId: photo.id })}
