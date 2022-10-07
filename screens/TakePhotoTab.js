@@ -1,10 +1,10 @@
 import React from "react";
 import { Text, View } from "react-native";
 
-export default function Upload() {
+export default function TakePhotoTab() {
   return (
     <View>
-      <Text>Upload</Text>
+      <Text>TakePhotoTab</Text>
     </View>
   );
 }

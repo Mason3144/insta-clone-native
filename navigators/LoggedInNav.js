@@ -2,7 +2,7 @@ import React from "react";
 import useMe from "../hooks/useMe";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import TabNav from "./TabsNav";
-import Upload from "../screens/Upload";
+import UploadNav from "./UploadNav";
 
 const Stack = createNativeStackNavigator();
 
@@ -13,7 +13,7 @@ const LoggedInNav = () => {
       screenOptions={{ headerShown: false, presentation: "modal" }}
     >
       <Stack.Screen name="Tabs" component={TabNav} />
-      <Stack.Screen name="Upload" component={Upload} />
+      <Stack.Screen name="Upload" component={UploadNav} />
     </Stack.Navigator>
   );
 };
