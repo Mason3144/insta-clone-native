@@ -87,7 +87,6 @@ export default Search = ({ navigation }) => {
       />
     </TouchableOpacity>
   );
-
   const refresh = async () => {
     setRefreshing(true);
     await refetch().finally(() => setRefreshing(false));

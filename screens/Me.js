@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { logUserOut } from "../apollo";
 import HeaderRight from "../components/HeaderRight";
+import ProfileBody from "../components/ProfileBody";
 import useMe from "../hooks/useMe";
 
 export default Me = ({ navigation }) => {
@@ -12,19 +13,5 @@ export default Me = ({ navigation }) => {
       headerRight: () => <HeaderRight userInfo={true} />,
     });
   });
-  return (
-    <View
-      style={{
-        backgroundColor: "black",
-        flex: 1,
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <Text style={{ color: "white" }}>Me</Text>
-      <TouchableOpacity onPress={() => logUserOut()}>
-        <Text style={{ color: "white" }}>logout</Text>
-      </TouchableOpacity>
-    </View>
-  );
+  return <ProfileBody ownerName={data?.me?.username} />;
 };

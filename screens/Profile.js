@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { Text, View } from "react-native";
 import HeaderRight from "../components/HeaderRight";
+import ProfileBody from "../components/ProfileBody";
 import useMe from "../hooks/useMe";
 
 export default Profile = ({ navigation, route }) => {
@@ -15,16 +16,5 @@ export default Profile = ({ navigation, route }) => {
       ),
     });
   }, [navigation]);
-  return (
-    <View
-      style={{
-        backgroundColor: "black",
-        flex: 1,
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <Text style={{ color: "white" }}>Someones Profile</Text>
-    </View>
-  );
+  return <ProfileBody ownerName={route?.params?.username} />;
 };
