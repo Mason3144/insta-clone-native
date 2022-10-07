@@ -40,14 +40,6 @@ const Payload = styled.Text`
   color: white;
 `;
 
-const Input = styled.TextInput`
-  background-color: rgba(255, 255, 255, 1);
-  color: black;
-  width: 70%;
-  padding: 5px 10px;
-  border-radius: 10px;
-`;
-
 const DELETECOMMENT_MUTATION = gql`
   mutation deleteComment($id: Int!) {
     deleteComment(id: $id) {

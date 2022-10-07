@@ -6,7 +6,10 @@ import {
 } from "@apollo/client";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setContext } from "@apollo/client/link/context";
-import { offsetLimitPagination } from "@apollo/client/utilities";
+import {
+  offsetLimitPagination,
+  relayStylePagination,
+} from "@apollo/client/utilities";
 import { AsyncStorageWrapper, CachePersistor } from "apollo3-cache-persist";
 
 const TOKEN = "token";
@@ -21,6 +24,7 @@ export const logUserIn = async (token) => {
 
 export const logUserOut = async () => {
   await AsyncStorage.removeItem(TOKEN);
+  await client.resetStore();
   isLoggedInVar(false);
   tokenVar(null);
 };
@@ -43,6 +47,7 @@ export const cache = new InMemoryCache({
     Query: {
       fields: {
         seeFeed: offsetLimitPagination(),
+        seePhotoComments: offsetLimitPagination(),
       },
     },
   },

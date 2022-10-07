@@ -33,7 +33,7 @@ export default FEED = ({ navigation }) => {
       offset: 0,
     },
   });
-
+  refetch();
   const renderPhoto = ({ item: photo }) => {
     return <FeedPhoto {...photo}></FeedPhoto>;
   };
@@ -43,6 +43,7 @@ export default FEED = ({ navigation }) => {
     await refetch().finally(() => setRefreshing(false));
   };
   const [refreshing, setRefreshing] = useState(false);
+
   return (
     <ScreenLayout loading={loading}>
       <FlatList

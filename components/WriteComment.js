@@ -1,4 +1,4 @@
-import { gql, useMutation } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Image, TextInput, View } from "react-native";
@@ -31,16 +31,17 @@ const SEEPHOTOCOMMENTS_QUERY = gql`
 `;
 
 export default function WriteComment({ photoId }) {
-  const { data } = useMe();
-  const { setValue, register, handleSubmit } = useForm();
+  const me = useMe();
+  const { setValue, register, handleSubmit, getValues } = useForm();
+  const { payload } = getValues();
   useEffect(() => {
     register("payload", {
       required: true,
     });
   }, []);
-  const onValid = ({ payload }) => {
+  const onValid = async ({ payload }) => {
     if (!loading) {
-      createCommentMutation({
+      await createCommentMutation({
         variables: {
           photoId,
           payload,
@@ -49,24 +50,30 @@ export default function WriteComment({ photoId }) {
     }
   };
   const [value, SetValue] = useState("");
-  const onCompleted = ({ createComment }) => {
+  const onCompleted = async ({ createComment }) => {
     const { ok } = createComment;
     if (ok) {
+      await refetch();
       SetValue("");
     }
   };
+
+  const { data, refetch } = useQuery(SEEPHOTOCOMMENTS_QUERY, {
+    variables: {
+      id: photoId,
+    },
+  });
 
   const [createCommentMutation, { loading }] = useMutation(
     CREATECOMMENT_MUTATION,
     {
       onCompleted,
-      refetchQueries: [{ query: SEEPHOTOCOMMENTS_QUERY }, "seePhotoComments"],
     }
   );
 
   return (
     <View style={{ flexDirection: "row", marginTop: 10 }}>
-      <Avatar resizeMode="cover" source={{ uri: data?.me?.avatar }} />
+      <Avatar resizeMode="cover" source={{ uri: me?.data?.me?.avatar }} />
       <TextInput
         placeholder="Write a comment here"
         value={value}
