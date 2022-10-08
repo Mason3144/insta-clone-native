@@ -41,7 +41,8 @@
     "react-native-screens": "~3.15.0",
     "react-native-tab-view": "^3.2.1",
     "react-native-web": "~0.18.7",
-    "styled-components": "^5.3.6"
+    "styled-components": "^5.3.6",
+    "expo-media-library": "~14.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

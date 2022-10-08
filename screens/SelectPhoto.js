@@ -1,6 +1,6 @@
-import React from "react";
-import { Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import * as MediaLibrary from "expo-media-library";
 
 const Container = styled.View`
   flex: 1;
@@ -16,6 +16,24 @@ const Bottom = styled.View`
 `;
 
 export default function SelectPhoto() {
+  const [ok, setOk] = useState(false);
+  const getPhotos = async () => {};
+  const getPermission = async () => {
+    const { accessPrivileges, canAskAgain } =
+      await MediaLibrary.getPermissionsAsync();
+    if (accessPrivileges === "none" && canAskAgain) {
+      const { accessPrivileges } = await MediaLibrary.requestPermissionsAsync();
+      if (accessPrivileges !== "none") {
+        setOk(ture);
+      }
+    } else if (accessPrivileges !== "none") {
+      setOk(ture);
+    }
+  };
+  useEffect(() => {
+    getPermission();
+    getPhotos();
+  }, []);
   return (
     <Container>
       <Top />

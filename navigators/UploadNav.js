@@ -25,7 +25,6 @@ export default function UploadNav() {
           <Stack.Navigator
             screenOptions={{
               headerTintColor: "white",
-
               headerLeft: ({ tintColor }) => (
                 <Ionicons
                   color={tintColor}
