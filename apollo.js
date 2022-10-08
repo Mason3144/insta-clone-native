@@ -30,7 +30,7 @@ export const logUserOut = async () => {
 };
 
 const httpLink = createHttpLink({
-  uri: `https://solid-ideas-film-175-211-17-8.loca.lt/graphql`,
+  uri: `https://legal-mice-sit-175-211-17-8.loca.lt/graphql`,
 });
 
 const authLink = setContext((_, { headers }) => {
@@ -47,7 +47,7 @@ export const cache = new InMemoryCache({
     Query: {
       fields: {
         seeFeed: offsetLimitPagination(),
-        seePhotoComments: offsetLimitPagination(),
+        // seePhotoComments: offsetLimitPagination(),
       },
     },
   },

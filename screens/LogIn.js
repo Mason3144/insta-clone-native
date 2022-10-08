@@ -27,6 +27,7 @@ const LogIn = ({ route: { params } }) => {
   const passwordRef = useRef();
   const onCompleted = async ({ login }) => {
     const { ok, token, error } = login;
+
     if (!ok) {
       Alert.alert("Error", error);
     }

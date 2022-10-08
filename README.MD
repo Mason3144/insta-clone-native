@@ -2,4 +2,4 @@ restiriction of TextInput such as length of word
 
 ## Comment
 
-- [ ] refetch after write a comment
+- [ ] refetch after write a comment and cache bug check
