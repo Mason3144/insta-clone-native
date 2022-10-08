@@ -17,27 +17,35 @@ const Bottom = styled.View`
 
 export default function SelectPhoto() {
   const [ok, setOk] = useState(false);
-  const getPhotos = async () => {};
+  const [photos, setPhotos] = useState([]);
+  const getPhotos = async () => {
+    if (ok) {
+      const { assets: photos } = await MediaLibrary.getAssetsAsync();
+      setPhotos(photos);
+    }
+  };
+
   const getPermission = async () => {
     const { accessPrivileges, canAskAgain } =
       await MediaLibrary.getPermissionsAsync();
     if (accessPrivileges === "none" && canAskAgain) {
       const { accessPrivileges } = await MediaLibrary.requestPermissionsAsync();
       if (accessPrivileges !== "none") {
-        setOk(ture);
+        setOk(true);
       }
     } else if (accessPrivileges !== "none") {
-      setOk(ture);
+      setOk(true);
     }
   };
+
   useEffect(() => {
     getPermission();
     getPhotos();
-  }, []);
+  }, [ok]);
   return (
     <Container>
       <Top />
-      <Bottom />
+      <Bottom></Bottom>
     </Container>
   );
 }
