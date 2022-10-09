@@ -30,7 +30,7 @@ export const logUserOut = async () => {
 };
 
 const httpLink = createHttpLink({
-  uri: `https://legal-mice-sit-175-211-17-8.loca.lt/graphql`,
+  uri: `https://floppy-walls-obey-175-211-17-8.loca.lt/graphql`,
 });
 
 const authLink = setContext((_, { headers }) => {

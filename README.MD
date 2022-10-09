@@ -1,4 +1,6 @@
-restiriction of TextInput such as length of word
+- [ ]restiriction of TextInput such as length of word
+
+- [ ] check all header options switch background-color to transparent to show current time, bettery and others on header
 
 ## Comment
 
