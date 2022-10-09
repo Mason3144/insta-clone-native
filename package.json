@@ -42,7 +42,9 @@
     "react-native-tab-view": "^3.2.1",
     "react-native-web": "~0.18.7",
     "styled-components": "^5.3.6",
-    "expo-media-library": "~14.2.0"
+    "expo-media-library": "~14.2.0",
+    "expo-camera": "~12.3.0",
+    "@react-native-community/slider": "4.2.3"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

@@ -45,7 +45,7 @@ export default function UploadNav() {
                   color={tintColor}
                   name="close"
                   size={28}
-                  onPress={() => navigation.navigate("FeedTab")}
+                  onPress={() => navigation.goBack()}
                 />
               ),
               headerStyle: {

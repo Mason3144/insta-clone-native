@@ -1,6 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 import React, { useState } from "react";
-import { FlatList, RefreshControl } from "react-native";
+import { FlatList, RefreshControl, StatusBar } from "react-native";
 import FeedPhoto from "../components/FeedPhoto";
 import ScreenLayout from "../components/ScreenLayout";
 import { COMMENT_FRAGMENT, PHOTO_FRAGMENT } from "../fragments";
@@ -46,6 +46,7 @@ export default FEED = ({ navigation }) => {
 
   return (
     <ScreenLayout loading={loading}>
+      <StatusBar barStyle={"light-content"} />
       <FlatList
         onEndReachedThreshold={0.2}
         onEndReached={() =>
