@@ -30,7 +30,7 @@ export const logUserOut = async () => {
 };
 
 const httpLink = createHttpLink({
-  uri: `https://strong-peas-sell-175-211-17-8.loca.lt/graphql`,
+  uri: `https://sixty-camels-argue-175-211-17-8.loca.lt/graphql`,
 });
 
 const authLink = setContext((_, { headers }) => {

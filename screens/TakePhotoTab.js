@@ -12,6 +12,7 @@ import { Ionicons } from "@expo/vector-icons";
 import styled from "styled-components";
 import Slider from "@react-native-community/slider";
 import * as MediaLibrary from "expo-media-library";
+import { useIsFocused } from "@react-navigation/native";
 
 const Container = styled.View`
   flex: 1;
@@ -100,7 +101,7 @@ export default function TakePhotoTab({ navigation }) {
     if (save) {
       await MediaLibrary.saveToLibraryAsync(takenPhoto);
     }
-    console.log(takenPhoto);
+    navigation.navigate("UploadForm", { file: takenPhoto });
   };
   const onUpload = () => {
     Alert.alert("Upload photo", "Upload photo or Save & Upload?", [

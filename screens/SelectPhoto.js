@@ -41,6 +41,21 @@ export default function SelectPhoto({ navigation }) {
     setPhotos(photos);
     setChosenPhoto(photos[0]?.uri);
   };
+  const HeaderRight = () => (
+    <TouchableOpacity
+      onPress={() => navigation.navigate("UploadForm", { file: chosenPhoto })}
+    >
+      <Text
+        style={{
+          color: colors.blue,
+          fontSize: 17,
+          fontWeight: "600",
+        }}
+      >
+        Next
+      </Text>
+    </TouchableOpacity>
+  );
 
   const getPermission = async () => {
     const { accessPrivileges, canAskAgain, status } =
@@ -59,6 +74,11 @@ export default function SelectPhoto({ navigation }) {
   useEffect(() => {
     getPermission();
   }, [ok]);
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: HeaderRight,
+    });
+  });
   const numColumns = 4;
   const { width } = useWindowDimensions();
   const choosePhoto = (uri) => {

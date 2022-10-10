@@ -27,19 +27,6 @@ export default function UploadNav() {
           <Stack.Navigator
             screenOptions={{
               headerTintColor: "white",
-              headerRight: () => (
-                <TouchableOpacity>
-                  <Text
-                    style={{
-                      color: colors.blue,
-                      fontSize: 17,
-                      fontWeight: "600",
-                    }}
-                  >
-                    Next
-                  </Text>
-                </TouchableOpacity>
-              ),
               headerLeft: ({ tintColor }) => (
                 <Ionicons
                   color={tintColor}
