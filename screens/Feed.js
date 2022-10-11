@@ -1,10 +1,15 @@
 import { gql, useQuery } from "@apollo/client";
-import React, { useState } from "react";
-import { FlatList, RefreshControl, StatusBar } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  FlatList,
+  RefreshControl,
+  StatusBar,
+  TouchableOpacity,
+} from "react-native";
 import FeedPhoto from "../components/FeedPhoto";
 import ScreenLayout from "../components/ScreenLayout";
 import { COMMENT_FRAGMENT, PHOTO_FRAGMENT } from "../fragments";
-
+import { Ionicons } from "@expo/vector-icons";
 const FEED_QUERY = gql`
   query seeFeed($offset: Int!) {
     seeFeed(offset: $offset) {
@@ -43,7 +48,14 @@ export default FEED = ({ navigation }) => {
     await refetch().finally(() => setRefreshing(false));
   };
   const [refreshing, setRefreshing] = useState(false);
-
+  const MessagesButton = () => (
+    <TouchableOpacity onPress={() => navigation.navigate("MessagesNav")}>
+      <Ionicons name="paper-plane" color="white" size={24} />
+    </TouchableOpacity>
+  );
+  useEffect(() => {
+    navigation.setOptions({ headerRight: MessagesButton });
+  }, []);
   return (
     <ScreenLayout loading={loading}>
       <StatusBar barStyle={"light-content"} />

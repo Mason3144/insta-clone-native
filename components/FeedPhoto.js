@@ -121,7 +121,7 @@ export default function FeedPhoto({
       >
         <File
           resizeMode="contain"
-          style={{ width, height: imageHeight }}
+          style={{ width, height: 400 }}
           source={{ uri: file }}
         />
       </TouchableOpacity>

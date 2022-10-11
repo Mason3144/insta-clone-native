@@ -1,6 +1,10 @@
 - [ ]restiriction of TextInput such as length of word
 
-- [ ] check all header options switch background-color to transparent to show current time, bettery and others on header
+- [ ] profile and search, pictures size fix
+
+## Feed
+
+- [ ] Feed, cache bug fix, scrolling
 
 ## Comment
 
