@@ -55,5 +55,4 @@ export const FEED_PHOTO = gql`
   }
   ${PHOTO_FRAGMENT}
   ${COMMENT_FRAGMENT}
-  ${USER_FRAGMENT}
 `;

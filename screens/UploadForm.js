@@ -8,15 +8,6 @@ import DismissKeyboard from "../components/DismissKeyboard";
 import { FEED_PHOTO } from "../fragments";
 import { ReactNativeFile } from "apollo-upload-client";
 
-const UPLOAD_PHOTO_MUTATION = gql`
-  mutation uploadPhoto($file: Upload!, $caption: String) {
-    uploadPhoto(file: $file, caption: $caption) {
-      ...FeedPhoto
-    }
-  }
-  ${FEED_PHOTO}
-`;
-
 const Container = styled.View`
   flex: 1;
   background-color: black;
@@ -35,8 +26,39 @@ const Caption = styled.TextInput`
   border-radius: 100px;
 `;
 
+const UPLOAD_PHOTO_MUTATION = gql`
+  mutation uploadPhoto($file: Upload!, $caption: String) {
+    uploadPhoto(file: $file, caption: $caption) {
+      ...FeedPhoto
+    }
+  }
+  ${FEED_PHOTO}
+`;
+
 export default function UploadForm({ route, navigation }) {
-  const [uploadPhotoMutation, { loading }] = useMutation(UPLOAD_PHOTO_MUTATION);
+  const updateUploadPhoto = (cache, result) => {
+    const {
+      data: { uploadPhoto },
+    } = result;
+    if (uploadPhoto?.id) {
+      cache.modify({
+        id: `ROOT_QUERY`,
+        fields: {
+          seeFeed(prev) {
+            return [uploadPhoto, ...prev];
+          },
+        },
+      });
+      navigation.navigate("FeedTab");
+    }
+  };
+
+  const [uploadPhotoMutation, { loading }] = useMutation(
+    UPLOAD_PHOTO_MUTATION,
+    {
+      update: updateUploadPhoto,
+    }
+  );
   const HeaderRight = () => (
     <TouchableOpacity onPress={handleSubmit(onValid)}>
       <Text

@@ -12,6 +12,7 @@ import {
 } from "@apollo/client/utilities";
 import { AsyncStorageWrapper, CachePersistor } from "apollo3-cache-persist";
 import { onError } from "@apollo/client/link/error";
+import { createUploadLink } from "apollo-upload-client";
 
 const TOKEN = "token";
 
@@ -30,8 +31,8 @@ export const logUserOut = async () => {
   tokenVar(null);
 };
 
-const httpLink = createHttpLink({
-  uri: `https://sixty-camels-argue-175-211-17-8.loca.lt/graphql`,
+const uploadHttpLink = createUploadLink({
+  uri: "https://sixty-camels-argue-175-211-17-8.loca.lt/graphql",
 });
 
 const authLink = setContext((_, { headers }) => {
@@ -64,7 +65,7 @@ export const cache = new InMemoryCache({
 });
 
 const client = new ApolloClient({
-  link: authLink.concat(onErrorLink).concat(httpLink),
+  link: authLink.concat(onErrorLink).concat(uploadHttpLink),
   cache,
 });
 
