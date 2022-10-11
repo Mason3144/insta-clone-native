@@ -42,7 +42,8 @@ const Touch = styled.TouchableOpacity`
   align-items: center;
 `;
 const FollowMessage = styled.TouchableOpacity`
-  background-color: ${(props) => (props.isFollowing ? `${colors.blue}` : gray)};
+  background-color: ${(props) =>
+    props.isFollowing ? `${colors.blue}` : "gray"};
   padding: 8px;
   border-radius: 5px;
   width: 45%;

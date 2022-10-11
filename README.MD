@@ -9,3 +9,7 @@
 ## Comment
 
 - [ ] refetch after write a comment and cache bug check
+
+## Profile
+
+- [ ] after logout, reset cache or refetch and test it
