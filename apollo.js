@@ -11,6 +11,7 @@ import {
   relayStylePagination,
 } from "@apollo/client/utilities";
 import { AsyncStorageWrapper, CachePersistor } from "apollo3-cache-persist";
+import { onError } from "@apollo/client/link/error";
 
 const TOKEN = "token";
 
@@ -42,6 +43,15 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
+const onErrorLink = onError(({ graphQLErrors, networkError }) => {
+  if (graphQLErrors) {
+    console.log("GQL", graphQLErrors);
+  }
+  if (networkError) {
+    console.log("NTW", networkError);
+  }
+});
+
 export const cache = new InMemoryCache({
   typePolicies: {
     Query: {
@@ -54,7 +64,7 @@ export const cache = new InMemoryCache({
 });
 
 const client = new ApolloClient({
-  link: authLink.concat(httpLink),
+  link: authLink.concat(onErrorLink).concat(httpLink),
   cache,
 });
 
