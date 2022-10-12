@@ -1,7 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { FlatList, KeyboardAvoidingView, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { gql, useMutation, useQuery, useSubscription } from "@apollo/client";
+import {
+  gql,
+  useApolloClient,
+  useMutation,
+  useQuery,
+  useSubscription,
+} from "@apollo/client";
 import ScreenLayout from "../components/ScreenLayout";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
@@ -146,14 +152,52 @@ export default function Room({ route, navigation }) {
       id: route?.params?.id,
     },
   });
-  useEffect(() => {
-    if (data?.seeRoom) {
-      subscribeToMore({
-        document: ROOM_UPDATES,
-        variables: { id: route?.params?.id },
+  const client = useApolloClient();
+  const updateQuery = (prevQuery, options) => {
+    const {
+      subscriptionData: {
+        data: { roomUpdates: message },
+      },
+    } = options;
+    if (message.id) {
+      const messageFragment = client.cache.writeFragment({
+        fragment: gql`
+          fragment NewMessage on Message {
+            id
+            payload
+            user {
+              id
+              username
+              avatar
+            }
+            read
+          }
+        `,
+        data: message,
+      });
+      client.cache.modify({
+        id: `Room:${route.params.id}`,
+        fields: {
+          messages(prev) {
+            return [...prev, messageFragment];
+          },
+        },
       });
     }
-  }, [data]);
+  };
+  const [subscribed, setSubscribed] = useState(false);
+  useEffect(() => {
+    if (data?.seeRoom && !subscribed) {
+      subscribeToMore({
+        document: ROOM_UPDATES,
+        variables: {
+          id: route?.params?.id,
+        },
+        updateQuery,
+      });
+      setSubscribed(true);
+    }
+  }, [data, subscribed]);
 
   const onValid = ({ message }) => {
     if (!messageLoading) {
@@ -181,6 +225,7 @@ export default function Room({ route, navigation }) {
       ),
     });
   }, []);
+
   const renderItem = ({ item: message }) => (
     <MessageContainer
       outGoing={message.user.username !== route?.params?.talkingTo?.username}

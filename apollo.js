@@ -16,6 +16,9 @@ import { AsyncStorageWrapper, CachePersistor } from "apollo3-cache-persist";
 import { onError } from "@apollo/client/link/error";
 import { createUploadLink } from "apollo-upload-client";
 import { WebSocketLink } from "@apollo/client/link/ws";
+import { SubscriptionClient } from "subscriptions-transport-ws";
+import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
+import { createClient } from "graphql-ws";
 
 const TOKEN = "token";
 
@@ -34,20 +37,19 @@ export const logUserOut = async () => {
   tokenVar(null);
 };
 
-const serverUri = "busy-hounds-heal-175-211-17-8.loca.lt";
+const serverUri = "ripe-lions-leave-175-211-17-8.loca.lt";
 const uploadHttpLink = createUploadLink({
   uri: `https://${serverUri}/graphql`,
 });
 
-const wsLink = new WebSocketLink({
-  uri: `ws://${serverUri}/graphql`,
-  options: {
-    reconnect: true,
+const wsLink = new GraphQLWsLink(
+  createClient({
+    url: `ws://${serverUri}/graphql`,
     connectionParams: () => ({
       token: tokenVar(),
     }),
-  },
-});
+  })
+);
 
 const authLink = setContext((_, { headers }) => {
   return {
