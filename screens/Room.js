@@ -28,13 +28,21 @@ const Message = styled.Text`
   margin: 0px 10px;
 `;
 const TextInput = styled.TextInput`
-  margin: 10px 0 50px 0;
-  width: 95%;
   border: 1px solid rgba(255, 255, 255, 0.5);
   padding: 10px 20px;
   border-radius: 1000px;
   color: white;
+  width: 90%;
+  margin-right: 10px;
 `;
+const InputContainer = styled.View`
+  margin: 10px 0 50px 0;
+  width: 95%;
+  flex-direction: row;
+  align-items: center;
+`;
+
+const SendButton = styled.TouchableOpacity``;
 
 const SEND_MESSAGE_MUTATION = gql`
   mutation sendMessage($payload: String!, $roomId: Int, $userId: Int) {
@@ -65,15 +73,17 @@ const SEE_ROOM_QUERY = gql`
 
 export default function Room({ route, navigation }) {
   const { data: meData } = useMe();
-  const { register, setValue, handleSubmit, getValues } = useForm();
+  const { register, setValue, handleSubmit, getValues, watch } = useForm();
   const updateSendMessage = (cache, result) => {
     const {
       data: {
         sendMessage: { ok, id },
       },
     } = result;
-    const { message } = getValues();
+
     if (ok && meData) {
+      const { message } = getValues();
+      setValue("message", "");
       const messageObj = {
         id,
         payload: message,
@@ -156,6 +166,7 @@ export default function Room({ route, navigation }) {
       <Message>{message.payload}</Message>
     </MessageContainer>
   );
+  const messages = [...(data?.seeRoom?.messages ?? [])];
   return (
     <KeyboardAvoidingView
       style={{ flex: 1, backgroundColor: "black" }}
@@ -164,21 +175,38 @@ export default function Room({ route, navigation }) {
     >
       <ScreenLayout loading={loading}>
         <FlatList
+          inverted
+          showsVerticalScrollIndicator={false}
           ItemSeparatorComponent={() => <View style={{ height: 15 }}></View>}
-          style={{ width: "100%" }}
-          data={data?.seeRoom?.messages}
+          style={{ width: "100%", marginVertical: 10 }}
+          data={messages.reverse()}
           keyExtractor={(message) => "" + message.id}
           renderItem={renderItem}
         />
-        <TextInput
-          placeholderTextColor="rgba(255,255,255,0.5)"
-          placeholderColor="white"
-          placeholder="Write a message..."
-          returnKeyLabel="Send Message"
-          returnKeyType="send"
-          onChangeText={(text) => setValue("message", text)}
-          onSubmitEditing={handleSubmit(onValid)}
-        />
+        <InputContainer>
+          <TextInput
+            placeholderTextColor="rgba(255,255,255,0.5)"
+            placeholderColor="white"
+            placeholder="Write a message..."
+            returnKeyLabel="Send Message"
+            returnKeyType="send"
+            onChangeText={(text) => setValue("message", text)}
+            onSubmitEditing={handleSubmit(onValid)}
+            value={watch("message")}
+          />
+          <SendButton
+            disabled={!Boolean(watch("message"))}
+            onPress={handleSubmit(onValid)}
+          >
+            <Ionicons
+              name="send"
+              color={
+                !Boolean(watch("message")) ? "rgba(255,255,255,0.5)" : "white"
+              }
+              size={22}
+            />
+          </SendButton>
+        </InputContainer>
       </ScreenLayout>
     </KeyboardAvoidingView>
   );
