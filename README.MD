@@ -16,6 +16,4 @@
 
 ## Room
 
-- [ ] reverse the data, scrolling fix
-
-https://www.apollographql.com/docs/react/data/subscriptions/
+- [ ] scrolling fix
