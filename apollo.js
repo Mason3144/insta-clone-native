@@ -43,9 +43,9 @@ const wsLink = new WebSocketLink({
   uri: `ws://${serverUri}/graphql`,
   options: {
     reconnect: true,
-    connectionParams: {
+    connectionParams: () => ({
       token: tokenVar(),
-    },
+    }),
   },
 });
 

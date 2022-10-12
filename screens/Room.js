@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { FlatList, KeyboardAvoidingView, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { gql, useMutation, useQuery } from "@apollo/client";
+import { gql, useMutation, useQuery, useSubscription } from "@apollo/client";
 import ScreenLayout from "../components/ScreenLayout";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
@@ -71,6 +71,21 @@ const SEE_ROOM_QUERY = gql`
   }
 `;
 
+const ROOM_UPDATES = gql`
+  subscription roomUpdates($id: Int!) {
+    roomUpdates(id: $id) {
+      id
+      payload
+      user {
+        id
+        username
+        avatar
+      }
+      read
+    }
+  }
+`;
+
 export default function Room({ route, navigation }) {
   const { data: meData } = useMe();
   const { register, setValue, handleSubmit, getValues, watch } = useForm();
@@ -125,11 +140,21 @@ export default function Room({ route, navigation }) {
     SEND_MESSAGE_MUTATION,
     { update: updateSendMessage }
   );
-  const { data, loading } = useQuery(SEE_ROOM_QUERY, {
+
+  const { data, loading, subscribeToMore } = useQuery(SEE_ROOM_QUERY, {
     variables: {
       id: route?.params?.id,
     },
   });
+  useEffect(() => {
+    if (data?.seeRoom) {
+      subscribeToMore({
+        document: ROOM_UPDATES,
+        variables: { id: route?.params?.id },
+      });
+    }
+  }, [data]);
+
   const onValid = ({ message }) => {
     if (!messageLoading) {
       sendMessageMutation({
