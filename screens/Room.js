@@ -1,25 +1,47 @@
 import React, { useEffect } from "react";
-import { FlatList, KeyboardAvoidingView } from "react-native";
+import { FlatList, KeyboardAvoidingView, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { gql, useQuery } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import ScreenLayout from "../components/ScreenLayout";
 import styled from "styled-components";
+import { useForm } from "react-hook-form";
 
-const MessageContainer = styled.View``;
+const MessageContainer = styled.View`
+  padding: 0px 10px;
+  flex-direction: ${(props) => (props.outGoing ? "row-reverse" : "row")};
+  align-items: flex-end;
+`;
 const Author = styled.View``;
-const Avatar = styled.Image``;
-const Username = styled.Text`
-  color: white;
+const Avatar = styled.Image`
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
 `;
 const Message = styled.Text`
   color: white;
+  background-color: rgba(255, 255, 255, 0.3);
+  padding: 5px 10px;
+  border-radius: 10px;
+  overflow: hidden;
+  font-size: 16px;
+  margin: 0px 10px;
 `;
 const TextInput = styled.TextInput`
-  margin-bottom: 50px;
+  margin: 25px 0 50px 0;
   width: 95%;
-  background-color: white;
+  border: 1px solid rgba(255, 255, 255, 0.5);
   padding: 10px 20px;
   border-radius: 1000px;
+  color: white;
+`;
+
+const SEND_MESSAGE_MUTATION = gql`
+  mutation sendMessage($payload: String!, $roomId: Int, $userId: Int) {
+    sendMessage(payload: $payload, roomId: $roomId, userId: $userId) {
+      ok
+      id
+    }
+  }
 `;
 
 const SEE_ROOM_QUERY = gql`
@@ -40,11 +62,26 @@ const SEE_ROOM_QUERY = gql`
 `;
 
 export default function Room({ route, navigation }) {
+  const { register, setValue, handleSubmit } = useForm();
+  const [sendMessageMutation, { loading: messageLoading }] = useMutation(
+    SEND_MESSAGE_MUTATION
+  );
   const { data, loading } = useQuery(SEE_ROOM_QUERY, {
     variables: {
       id: route?.params?.id,
     },
   });
+  const onValid = ({ message }) => {
+    sendMessageMutation({
+      variables: {
+        payload: message,
+        roomId: route?.params?.id,
+      },
+    });
+  };
+  useEffect(() => {
+    register("message", { required: true });
+  }, [register]);
   useEffect(() => {
     navigation.setOptions({
       title: `${route?.params?.talkingTo?.username}`,
@@ -59,10 +96,11 @@ export default function Room({ route, navigation }) {
     });
   }, []);
   const renderItem = ({ item: message }) => (
-    <MessageContainer>
+    <MessageContainer
+      outGoing={message.user.username !== route?.params?.talkingTo?.username}
+    >
       <Author>
         <Avatar source={{ uri: message.user.avatar }} />
-        <Username>{message.user.username}</Username>
       </Author>
       <Message>{message.payload}</Message>
     </MessageContainer>
@@ -71,20 +109,24 @@ export default function Room({ route, navigation }) {
     <KeyboardAvoidingView
       style={{ flex: 1, backgroundColor: "black" }}
       behavior="height"
-      keyboardVerticalOffset={70}
+      keyboardVerticalOffset={130}
     >
       <ScreenLayout loading={loading}>
         <FlatList
-          inverted
+          ItemSeparatorComponent={() => <View style={{ height: 15 }}></View>}
           style={{ width: "100%" }}
           data={data?.seeRoom?.messages}
           keyExtractor={(message) => "" + message.id}
           renderItem={renderItem}
         />
         <TextInput
-          placeholder="Write a message"
+          placeholderTextColor="rgba(255,255,255,0.5)"
+          placeholderColor="white"
+          placeholder="Write a message..."
           returnKeyLabel="Send Message"
           returnKeyType="send"
+          onChangeText={(text) => setValue("message", text)}
+          onSubmitEditing={handleSubmit(onValid)}
         />
       </ScreenLayout>
     </KeyboardAvoidingView>
