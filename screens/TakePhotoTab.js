@@ -145,7 +145,7 @@ export default function TakePhotoTab({ navigation }) {
           <CloseBtn>
             <Ionicons
               color="white"
-              name="arrow-back-outline"
+              name="chevron-back-outline"
               size={28}
               onPress={() => navigation.goBack()}
             />
