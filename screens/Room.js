@@ -5,6 +5,7 @@ import { gql, useMutation, useQuery } from "@apollo/client";
 import ScreenLayout from "../components/ScreenLayout";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
+import useMe from "../hooks/useMe";
 
 const MessageContainer = styled.View`
   padding: 0px 10px;
@@ -27,7 +28,7 @@ const Message = styled.Text`
   margin: 0px 10px;
 `;
 const TextInput = styled.TextInput`
-  margin: 25px 0 50px 0;
+  margin: 10px 0 50px 0;
   width: 95%;
   border: 1px solid rgba(255, 255, 255, 0.5);
   padding: 10px 20px;
@@ -47,6 +48,7 @@ const SEND_MESSAGE_MUTATION = gql`
 const SEE_ROOM_QUERY = gql`
   query seeRoom($id: Int!) {
     seeRoom(id: $id) {
+      id
       messages {
         id
         payload
@@ -62,9 +64,56 @@ const SEE_ROOM_QUERY = gql`
 `;
 
 export default function Room({ route, navigation }) {
-  const { register, setValue, handleSubmit } = useForm();
+  const { data: meData } = useMe();
+  const { register, setValue, handleSubmit, getValues } = useForm();
+  const updateSendMessage = (cache, result) => {
+    const {
+      data: {
+        sendMessage: { ok, id },
+      },
+    } = result;
+    const { message } = getValues();
+    if (ok && meData) {
+      const messageObj = {
+        id,
+        payload: message,
+        user: {
+          id: meData.me.id,
+          username: meData.me.username,
+          avatar: meData.me.avatar,
+        },
+        read: true,
+        __typename: "Message",
+      };
+      const messageFragment = cache.writeFragment({
+        fragment: gql`
+          fragment NewMessage on Message {
+            id
+            payload
+            user {
+              id
+              username
+              avatar
+            }
+            read
+          }
+        `,
+        data: messageObj,
+      });
+      cache.modify({
+        id: `Room:${route.params.id}`,
+        fields: {
+          messages(prev) {
+            return [...prev, messageFragment];
+          },
+        },
+      });
+    }
+  };
+
   const [sendMessageMutation, { loading: messageLoading }] = useMutation(
-    SEND_MESSAGE_MUTATION
+    SEND_MESSAGE_MUTATION,
+    { update: updateSendMessage }
   );
   const { data, loading } = useQuery(SEE_ROOM_QUERY, {
     variables: {
@@ -72,12 +121,14 @@ export default function Room({ route, navigation }) {
     },
   });
   const onValid = ({ message }) => {
-    sendMessageMutation({
-      variables: {
-        payload: message,
-        roomId: route?.params?.id,
-      },
-    });
+    if (!messageLoading) {
+      sendMessageMutation({
+        variables: {
+          payload: message,
+          roomId: route?.params?.id,
+        },
+      });
+    }
   };
   useEffect(() => {
     register("message", { required: true });
