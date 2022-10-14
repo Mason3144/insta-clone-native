@@ -1,5 +1,5 @@
-import { useNavigation, useNavigationBuilder } from "@react-navigation/native";
-import React from "react";
+import { useNavigation } from "@react-navigation/native";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { colors } from "../../colors";
 import useMe from "../../hooks/useMe";
@@ -21,6 +21,7 @@ const Avatar = styled.Image`
   height: 50px;
   border-radius: 50%;
   margin-right: 20px;
+  background-color: gray;
 `;
 const Data = styled.View``;
 const UnreadDot = styled.View`
@@ -38,15 +39,23 @@ const UnreadText = styled.Text`
   color: white;
   margin-top: 2px;
   font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
 `;
 
-export default function RoomItem({ users, unreadTotal, id }) {
+export default function RoomItem({ users, messages, unreadTotal, id }) {
+  const [lastMSG, setLastMSG] = useState("");
   const { data: meData } = useMe();
   const navigation = useNavigation();
   const talkingTo = users.find(
     (user) => user.username !== meData?.me?.username
   );
   const goToRoom = () => navigation.navigate("Room", { id, talkingTo });
+  useEffect(() => {
+    if (messages.length > 0) {
+      setLastMSG(messages[messages.length - 1].payload);
+    }
+  }, []);
+
   return (
     <RoomContainer onPress={goToRoom}>
       <Column>
@@ -54,7 +63,9 @@ export default function RoomItem({ users, unreadTotal, id }) {
         <Data>
           <Username>{talkingTo.username}</Username>
           <UnreadText>
-            {unreadTotal} unread {unreadTotal === 1 ? "message" : "messages"}
+            {lastMSG.length < 33
+              ? `${lastMSG}`
+              : `${lastMSG.substring(0, 30)}...`}
           </UnreadText>
         </Data>
       </Column>

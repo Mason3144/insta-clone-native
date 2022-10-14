@@ -1,21 +1,12 @@
-import { gql, useLazyQuery } from "@apollo/client";
 import { useNavigation } from "@react-navigation/native";
-import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import {
-  ActivityIndicator,
-  FlatList,
-  Image,
-  RefreshControl,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  useWindowDimensions,
-  View,
-} from "react-native";
-import styled from "styled-components";
-import { colors } from "../colors";
-import DismissKeyboard from "../components/DismissKeyboard";
+import React from "react";
+import { FlatList, TouchableOpacity, useWindowDimensions } from "react-native";
+import styled from "styled-components/native";
+
+const Images = styled.Image`
+  width: ${(props) => props.width / 4}px;
+  height: 100px;
+`;
 
 export default ProfilePhoto = ({ seeProfile }) => {
   const navigation = useNavigation();
@@ -27,10 +18,7 @@ export default ProfilePhoto = ({ seeProfile }) => {
     <TouchableOpacity
       onPress={() => navigation.navigate("Photo", { photoId: photo.id })}
     >
-      <Image
-        source={{ uri: photo.file }}
-        style={{ width: width / numColumns, height: 100 }}
-      />
+      <Images source={{ uri: photo.file }} width={width} />
     </TouchableOpacity>
   );
 

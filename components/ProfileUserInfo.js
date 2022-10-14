@@ -1,8 +1,11 @@
+import { gql, useMutation } from "@apollo/client";
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import styled from "styled-components";
 import { colors } from "../colors";
+import ProfileMessage from "./ProfileMessage";
+import { Ionicons } from "@expo/vector-icons";
 
 const Name = styled.Text`
   color: white;
@@ -41,7 +44,7 @@ const Touch = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
 `;
-const FollowMessage = styled.TouchableOpacity`
+const Follow = styled.TouchableOpacity`
   background-color: ${(props) =>
     props.isFollowing ? `${colors.blue}` : "gray"};
   padding: 8px;
@@ -50,13 +53,24 @@ const FollowMessage = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
 `;
+
 const Edit = styled.Text`
   color: white;
   font-weight: 700;
   font-size: 18px;
 `;
+
+const FOLLOW_MUTATION = gql`
+  mutation followUser($username: String) {
+    followUser(username: $username) {
+      ok
+    }
+  }
+`;
+
 export default function ProfileUserInfo({ seeProfile, loading }) {
   const {
+    id,
     firstName,
     lastName,
     avatar,
@@ -71,11 +85,35 @@ export default function ProfileUserInfo({ seeProfile, loading }) {
     username,
   } = seeProfile;
   const navigation = useNavigation();
+
+  const updateFollowers = (cache, { data }) => {
+    const {
+      followUser: { ok },
+    } = data;
+    if (ok) {
+      const userId = `User:${id}`;
+      cache.modify({
+        id: userId,
+        fields: {
+          isFollowing(prev) {
+            return !prev;
+          },
+        },
+      });
+    }
+  };
+  const [followUserMutation] = useMutation(FOLLOW_MUTATION, {
+    variables: {
+      username,
+    },
+    update: updateFollowers,
+  });
   return (
     <View style={{ paddingTop: 30, paddingLeft: 30, paddingBottom: 30 }}>
       <View style={{ flexDirection: "row" }}>
         <View>
           <Avatar source={{ uri: avatar }} />
+
           <View style={{ flexDirection: "row", padding: 5 }}>
             <Name>{firstName}</Name>
             <Name>{lastName}</Name>
@@ -140,19 +178,22 @@ export default function ProfileUserInfo({ seeProfile, loading }) {
               justifyContent: "center",
               alignItems: "center",
             }}
-            onPress={() => navigation.navigate("EditProfile")}
+            onPress={() => navigation.navigate("EditProfile", { avatar })}
           >
             <Edit>Edit profile</Edit>
           </TouchableOpacity>
         ) : (
           <View style={{ flexDirection: "row" }}>
-            <FollowMessage isFollowing={isFollowing}>
+            <Follow
+              onPress={() => followUserMutation()}
+              isFollowing={isFollowing}
+            >
               <Edit>{isFollowing ? "Follow" : "Unfollow"}</Edit>
-            </FollowMessage>
+            </Follow>
             <View style={{ width: "3%" }}></View>
-            <FollowMessage isFollowing={true}>
+            <ProfileMessage id={id} avatar={avatar} username={username}>
               <Edit>Message</Edit>
-            </FollowMessage>
+            </ProfileMessage>
           </View>
         )}
       </View>

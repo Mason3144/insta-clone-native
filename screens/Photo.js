@@ -1,12 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 import React, { useState } from "react";
-import {
-  RefreshControl,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { RefreshControl, ScrollView } from "react-native";
 import FeedPhoto from "../components/FeedPhoto";
 import { COMMENT_FRAGMENT, PHOTO_FRAGMENT } from "../fragments";
 import ScreenLayout from "../components/ScreenLayout";

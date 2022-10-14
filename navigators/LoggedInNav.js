@@ -45,7 +45,7 @@ const LoggedInNav = () => {
       <Stack.Screen
         name="MessagesNav"
         component={MessagesNav}
-        options={{ headerShown: false }}
+        options={{ headerShown: false, gestureEnabled: false }}
       />
     </Stack.Navigator>
   );

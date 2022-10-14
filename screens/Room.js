@@ -1,13 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FlatList, KeyboardAvoidingView, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import {
-  gql,
-  useApolloClient,
-  useMutation,
-  useQuery,
-  useSubscription,
-} from "@apollo/client";
+import { gql, useApolloClient, useMutation, useQuery } from "@apollo/client";
 import ScreenLayout from "../components/ScreenLayout";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
@@ -18,7 +12,7 @@ const MessageContainer = styled.View`
   flex-direction: ${(props) => (props.outGoing ? "row-reverse" : "row")};
   align-items: flex-end;
 `;
-const Author = styled.View``;
+const Author = styled.TouchableOpacity``;
 const Avatar = styled.Image`
   height: 20px;
   width: 20px;
@@ -237,12 +231,17 @@ export default function Room({ route, navigation }) {
       ),
     });
   }, []);
-
+  const goToProfile = () => {
+    navigation.navigate("Profile", {
+      username: route?.params?.talkingTo?.username,
+      id: route?.params?.talkingTo?.id,
+    });
+  };
   const renderItem = ({ item: message }) => (
     <MessageContainer
       outGoing={message.user.username !== route?.params?.talkingTo?.username}
     >
-      <Author>
+      <Author onPress={() => goToProfile()}>
         <Avatar source={{ uri: message.user.avatar }} />
       </Author>
       <Message>{message.payload}</Message>

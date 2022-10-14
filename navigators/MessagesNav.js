@@ -1,6 +1,5 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
-import styled from "styled-components";
 import Room from "../screens/Room";
 import Rooms from "../screens/Rooms";
 import { Ionicons } from "@expo/vector-icons";

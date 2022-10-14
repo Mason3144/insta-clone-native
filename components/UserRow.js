@@ -1,6 +1,7 @@
 import { gql, useMutation } from "@apollo/client";
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
+import { Text } from "react-native";
 import styled from "styled-components/native";
 import { colors } from "../colors";
 
@@ -50,7 +51,14 @@ const FOLLOW_MUTATION = gql`
   }
 `;
 
-export default function UserRow({ avatar, username, id, isFollowing, isMe }) {
+export default function UserRow({
+  notification,
+  avatar,
+  username,
+  id,
+  isFollowing,
+  isMe,
+}) {
   const navigation = useNavigation();
   const updateFollowers = (cache, { data }) => {
     const {
@@ -79,7 +87,13 @@ export default function UserRow({ avatar, username, id, isFollowing, isMe }) {
       <Column onPress={() => navigation.navigate("Profile", { username, id })}>
         <Avatar source={{ uri: avatar }} />
         <Username>{username}</Username>
+        {notification ? (
+          <Text style={{ color: "rgba(255,255,255,0.7)", marginLeft: 5 }}>
+            has started following you
+          </Text>
+        ) : null}
       </Column>
+
       {!isMe ? (
         <FollowBtn
           isFollowing={isFollowing}

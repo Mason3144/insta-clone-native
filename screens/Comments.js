@@ -1,20 +1,35 @@
-import { gql, useQuery } from "@apollo/client";
+import { gql, useApolloClient, useMutation, useQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
   KeyboardAvoidingView,
-  RefreshControl,
   View,
+  TextInput,
 } from "react-native";
+import { useForm } from "react-hook-form";
 import { COMMENT_FRAGMENT } from "../fragments";
 import CommentComponent from "../components/CommentComponent";
 import styled from "styled-components";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import WriteComment from "../components/WriteComment";
+import useMe from "../hooks/useMe";
+const Avatar = styled.Image`
+  margin-right: 10px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+`;
+
+const CREATECOMMENT_MUTATION = gql`
+  mutation createComment($photoId: Int!, $payload: String!) {
+    createComment(photoId: $photoId, payload: $payload) {
+      ok
+      id
+    }
+  }
+`;
 
 const SEEPHOTOCOMMENTS_QUERY = gql`
-  query SeePhotoComments($photoId: Int!, $offset: Int!) {
+  query seePhotoComments($photoId: Int!, $offset: Int!) {
     seePhotoComments(photoId: $photoId, offset: $offset) {
       ...CommentFragment
     }
@@ -23,7 +38,44 @@ const SEEPHOTOCOMMENTS_QUERY = gql`
 `;
 
 export default Comments = ({ route }) => {
-  const { data, loading, fetchMore, refetch } = useQuery(
+  const me = useMe();
+  const client = useApolloClient();
+  const { setValue, register, handleSubmit, getValues } = useForm();
+  useEffect(() => {
+    register("payload", {
+      required: true,
+    });
+  }, []);
+
+  const onValid = async ({ payload }) => {
+    if (!loading) {
+      await createCommentMutation({
+        variables: {
+          photoId: route?.params?.photoId,
+          payload,
+        },
+      });
+    }
+  };
+  const [value, SetValue] = useState("");
+  const onCompleted = async ({ createComment }) => {
+    const { ok } = createComment;
+    if (ok) {
+      refetch();
+      SetValue("");
+
+      client.cache.modify({
+        id: `Photo:${route?.params?.photoId}`,
+        fields: {
+          commentNumber(prev) {
+            return prev + 1;
+          },
+        },
+      });
+    }
+  };
+
+  const { data, loading, refetch, fetchMore } = useQuery(
     SEEPHOTOCOMMENTS_QUERY,
     {
       variables: {
@@ -32,12 +84,13 @@ export default Comments = ({ route }) => {
       },
     }
   );
-  // refetch();
+  const [createCommentMutation] = useMutation(CREATECOMMENT_MUTATION, {
+    onCompleted,
+  });
   return (
     <View
       style={{
         backgroundColor: "black",
-        // flex: 1,
         padding: 20,
         height: "100%",
       }}
@@ -52,7 +105,7 @@ export default Comments = ({ route }) => {
             keyboardVerticalOffset={Platform.OS === "ios" ? 120 : 0}
           >
             <FlatList
-              onEndReachedThreshold={0.2}
+              onEndReachedThreshold={0}
               onEndReached={() =>
                 fetchMore({
                   variables: {
@@ -64,11 +117,36 @@ export default Comments = ({ route }) => {
               data={data?.seePhotoComments}
               keyExtractor={(comment) => "" + comment.id}
               renderItem={({ item: comment }) => (
-                <CommentComponent {...comment} />
+                <CommentComponent
+                  {...comment}
+                  photoId={route?.params?.photoId}
+                />
               )}
             />
 
-            <WriteComment photoId={route?.params?.photoId} />
+            <View style={{ flexDirection: "row", marginTop: 10 }}>
+              <Avatar
+                resizeMode="cover"
+                source={{ uri: me?.data?.me?.avatar }}
+              />
+              <TextInput
+                placeholder="Write a comment here"
+                value={value}
+                onChangeText={(text) => {
+                  setValue("payload", text);
+                  SetValue(text);
+                }}
+                returnKeyType="send"
+                onSubmitEditing={handleSubmit(onValid)}
+                style={{
+                  backgroundColor: "white",
+                  height: 40,
+                  width: "80%",
+                  padding: 10,
+                  borderRadius: 10,
+                }}
+              />
+            </View>
           </KeyboardAvoidingView>
         </View>
       )}

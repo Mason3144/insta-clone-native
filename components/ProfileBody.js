@@ -1,6 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 import React, { useEffect } from "react";
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import ProfilePhoto from "./ProfilePhoto";
 import ProfileUserInfo from "./ProfileUserInfo";
 
@@ -45,7 +45,10 @@ export default function ProfileBody({ ownerName }) {
     },
     skip: !ownerName,
   });
-  refetch();
+  useEffect(() => {
+    refetch();
+  }, []);
+
   return (
     <View
       style={{

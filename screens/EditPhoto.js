@@ -14,10 +14,14 @@ import { colors } from "../colors";
 const Container = styled.View`
   flex: 1;
   background-color: black;
+  justify-content: center;
+  align-items: center;
 `;
 const Top = styled.View`
   flex: 1;
   background-color: black;
+  justify-content: center;
+  align-items: center;
 `;
 const Bottom = styled.View`
   flex: 1;
@@ -30,7 +34,7 @@ const IconContainer = styled.View`
   right: 0px;
 `;
 
-export default function SelectPhoto({ navigation }) {
+export default function EditPhoto({ navigation }) {
   const [ok, setOk] = useState(false);
   const [photos, setPhotos] = useState([]);
   const [photoLocal, setPhotoLocal] = useState("");
@@ -44,7 +48,7 @@ export default function SelectPhoto({ navigation }) {
   };
   const HeaderRight = () => (
     <TouchableOpacity
-      onPress={() => navigation.navigate("UploadForm", { file: photoLocal })}
+      onPress={() => navigation.navigate("EditProfile", { avatar: photoLocal })}
     >
       <Text
         style={{
@@ -109,7 +113,13 @@ export default function SelectPhoto({ navigation }) {
         {chosenPhoto !== "" ? (
           <Image
             source={{ uri: chosenPhoto }}
-            style={{ width, height: "100%", resizeMode: "contain" }}
+            style={{
+              width: 200,
+              height: 200,
+              resizeMode: "cover",
+              borderRadius: 100,
+              backgroundColor: "gray",
+            }}
           />
         ) : null}
       </Top>

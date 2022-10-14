@@ -1,19 +1,9 @@
 import React from "react";
-import {
-  Alert,
-  KeyboardAvoidingView,
-  ScrollView,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Alert, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { gql, useMutation } from "@apollo/client";
 import styled from "styled-components";
 import { useNavigation } from "@react-navigation/native";
-import { colors } from "../colors";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const Container = styled.View`
   flex-direction: row;
@@ -54,6 +44,7 @@ export default function CommentComponent({
   payload,
   isMine,
   updatedAt,
+  photoId,
 }) {
   const navigation = useNavigation();
   const deleteComment = (cache, { data }) => {
@@ -62,6 +53,14 @@ export default function CommentComponent({
     } = data;
     if (ok) {
       cache.evict({ id: `Comment:${id}` });
+      cache.modify({
+        id: `Photo:${photoId}`,
+        fields: {
+          commentNumber(prev) {
+            return prev - 1;
+          },
+        },
+      });
     }
   };
 
@@ -96,9 +95,10 @@ export default function CommentComponent({
     const hour = Math.ceil(gap / (60 * 60 * 1000));
     if (hour >= 24) {
       return `${day}d ago`;
-    } else {
-      return `${hour - 1}h ago`;
+    } else if (hour === 0) {
+      return `${hour}h ago`;
     }
+    return `${hour - 1}h ago`;
   };
 
   const [deleteCommentMutation] = useMutation(DELETECOMMENT_MUTATION, {

@@ -1,9 +1,8 @@
 import { gql, useQuery } from "@apollo/client";
-import React, { useEffect, useState } from "react";
-import { FlatList, RefreshControl, Text, View } from "react-native";
+import React, { useEffect } from "react";
+import { FlatList } from "react-native";
 import ScreenLayout from "../components/ScreenLayout";
 import UserRow from "../components/UserRow";
-import { USER_FRAGMENT } from "../fragments";
 
 const SEEFOLLOWING_QUERY = gql`
   query SeeFollowing($username: String!, $lastId: Int) {

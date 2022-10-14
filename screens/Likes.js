@@ -1,6 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
-import React, { useState } from "react";
-import { FlatList, RefreshControl, Text, View } from "react-native";
+import React from "react";
+import { FlatList } from "react-native";
 import ScreenLayout from "../components/ScreenLayout";
 import UserRow from "../components/UserRow";
 import { USER_FRAGMENT } from "../fragments";

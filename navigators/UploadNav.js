@@ -5,8 +5,6 @@ import React from "react";
 import SelectPhoto from "../screens/SelectPhoto";
 import TakePhotoTab from "../screens/TakePhotoTab";
 import { useNavigation } from "@react-navigation/native";
-import { Text, TouchableOpacity } from "react-native";
-import { colors } from "../colors";
 
 const Tab = createMaterialTopTabNavigator();
 const Stack = createNativeStackNavigator();

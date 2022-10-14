@@ -1,19 +1,16 @@
 - [ ]restiriction of TextInput such as length of word
-
-- [ ] profile and search, pictures size fix
+- [ ] model update(migrate)
 
 ## Feed
 
-- [ ] Feed, cache bug fix, scrolling
-
 ## Comment
-
-- [ ] refetch after write a comment and cache bug check
 
 ## Profile
 
-- [ ] after logout, reset cache or refetch and test it
+message(back: 룸이 있는지 먼저확인후 없으면 만들고 있으면 유저로 룸을 찾은후 실행
+and front)
+
+,
+editProfile(useEffect refetch();)
 
 ## Room
-
-- [ ] scrolling fix

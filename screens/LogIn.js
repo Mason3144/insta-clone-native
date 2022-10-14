@@ -3,8 +3,8 @@ import AuthButton from "../components/auth/AuthButton";
 import AuthLayout from "../components/auth/AuthLayout";
 import { TextInput } from "../components/auth/AythShared";
 import { useForm } from "react-hook-form";
-import { gql, useMutation, useReactiveVar } from "@apollo/client";
-import { isLoggedInVar, logUserIn } from "../apollo";
+import { gql, useMutation } from "@apollo/client";
+import { logUserIn } from "../apollo";
 import { Alert } from "react-native";
 
 const LOGIN_MUTATION = gql`

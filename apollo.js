@@ -4,6 +4,7 @@ import {
   InMemoryCache,
   makeVar,
   split,
+  useApolloClient,
 } from "@apollo/client";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setContext } from "@apollo/client/link/context";
@@ -32,12 +33,12 @@ export const logUserIn = async (token) => {
 
 export const logUserOut = async () => {
   await AsyncStorage.removeItem(TOKEN);
-  await client.resetStore();
   isLoggedInVar(false);
   tokenVar(null);
 };
 
-const serverUri = "ripe-lions-leave-175-211-17-8.loca.lt";
+const serverUri = "new-ghosts-dress-175-211-17-8.loca.lt";
+
 const uploadHttpLink = createUploadLink({
   uri: `https://${serverUri}/graphql`,
 });
@@ -74,7 +75,7 @@ export const cache = new InMemoryCache({
     Query: {
       fields: {
         seeFeed: offsetLimitPagination(),
-        // seePhotoComments: offsetLimitPagination(),
+        seePhotoComments: offsetLimitPagination(),
       },
     },
   },

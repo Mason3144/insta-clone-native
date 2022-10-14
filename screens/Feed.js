@@ -38,7 +38,6 @@ export default FEED = ({ navigation }) => {
       offset: 0,
     },
   });
-  refetch();
   const renderPhoto = ({ item: photo }) => {
     return <FeedPhoto {...photo}></FeedPhoto>;
   };
