@@ -37,7 +37,7 @@ export const logUserOut = async () => {
   tokenVar(null);
 };
 
-const serverUri = "new-ghosts-dress-175-211-17-8.loca.lt";
+const serverUri = "instagram-clone-coding-backend.herokuapp.com";
 
 const uploadHttpLink = createUploadLink({
   uri: `https://${serverUri}/graphql`,
