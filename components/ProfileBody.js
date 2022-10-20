@@ -45,6 +45,7 @@ export default function ProfileBody({ ownerName }) {
     },
     skip: !ownerName,
   });
+  refetch();
   useEffect(() => {
     refetch();
   }, []);

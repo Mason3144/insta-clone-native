@@ -35,6 +35,8 @@ export const logUserOut = async () => {
   await AsyncStorage.removeItem(TOKEN);
   isLoggedInVar(false);
   tokenVar(null);
+  const client = useApolloClient();
+  await client.resetStore();
 };
 
 const serverUri = "instagram-clone-coding-backend.herokuapp.com";

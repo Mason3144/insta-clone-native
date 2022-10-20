@@ -40,7 +40,6 @@ export default function StackNavFactory({ screenName }) {
                   maxWidth: 150,
                 }}
                 resizeMode="contain"
-                source={require("../assets/logo.png")}
               />
             ),
           }}
