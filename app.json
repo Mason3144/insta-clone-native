@@ -1,5 +1,6 @@
 {
   "expo": {
+    "owner": "x121212",
     "name": "insta-clone-native",
     "slug": "insta-clone-native",
     "version": "1.0.0",
@@ -14,7 +15,9 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "co.masonlee.instaclone",
@@ -30,6 +33,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "b48c6cf2-6c8a-4c34-9ec9-444626907cdc"
+      }
     }
   }
 }

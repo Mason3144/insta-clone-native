@@ -18,10 +18,7 @@ export default function App() {
   const preloadAssets = () => {
     const fontsToLoad = [Ionicons.font];
     const fontPromises = fontsToLoad.map((font) => Font.loadAsync(font));
-    const imagesToLoad = [
-      require("./assets/logo.png"),
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Instagram_logo.svg/840px-Instagram_logo.svg.png",
-    ];
+    const imagesToLoad = [];
     const imagePromises = imagesToLoad.map((img) => Asset.loadAsync(img));
     return Promise.all([...fontPromises, ...imagePromises]);
   };

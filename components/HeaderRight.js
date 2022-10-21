@@ -5,8 +5,8 @@ import { logUserOut } from "../apollo";
 import { useApolloClient } from "@apollo/client";
 export default function HeaderRight({ userInfo }) {
   const client = useApolloClient();
-  const logout = () => {
-    client.resetStore();
+  const logout = async () => {
+    await client.resetStore();
     logUserOut();
   };
 

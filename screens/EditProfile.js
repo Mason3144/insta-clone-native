@@ -24,6 +24,11 @@ const Avatar = styled.Image`
   margin-bottom: 30px;
 `;
 
+const ErrorText = styled.Text`
+  color: tomato;
+  margin: 0 10px 10px 10px;
+`;
+
 const EDIT_PROFILE_MUTATION = gql`
   mutation editProfile(
     $firstName: String
@@ -117,7 +122,7 @@ export default function EditProfile({ navigation, route }) {
     register("lastName", { requrired: true });
     register("bio", { requrired: true });
     register("email", { requrired: true });
-    register("password", { requrired: true });
+    register("password", { requrired: true, minLength: 8 });
   }, [register]);
   useEffect(() => {
     setAvatar(route?.params?.avatar);
@@ -140,6 +145,7 @@ export default function EditProfile({ navigation, route }) {
           <TextInput
             autoFocus
             placeholder="First Name"
+            maxLength={10}
             returnKeyType="next"
             onSubmitEditing={() => onNext(lastNameRef)}
             blurOnSubmit={false}
@@ -149,6 +155,7 @@ export default function EditProfile({ navigation, route }) {
           <TextInput
             placeholder="Last Name"
             ref={lastNameRef}
+            maxLength={10}
             returnKeyType="next"
             onSubmitEditing={() => onNext(bioRef)}
             blurOnSubmit={false}
@@ -176,6 +183,13 @@ export default function EditProfile({ navigation, route }) {
             placeholderTextColor={"rgba(255,255,255,0.5)"}
             onChangeText={(text) => setValue("email", text)}
           />
+          {watch("email") ? (
+            !/^[a-zA-Z0-9_.-]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/.test(
+              watch("email")
+            ) ? (
+              <ErrorText>Email must be email type</ErrorText>
+            ) : null
+          ) : null}
           <TextInput
             placeholder="Password"
             ref={passwordRef}
@@ -187,6 +201,16 @@ export default function EditProfile({ navigation, route }) {
             onChangeText={(text) => setValue("password", text)}
             onSubmitEditing={handleSubmit(onValid)}
           />
+          {watch("password") ? (
+            !/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d#?!@$%^&*-]{8,}$/.test(
+              watch("password")
+            ) ? (
+              <ErrorText>
+                Password must be more than 7 characters, at least one letter and
+                one number
+              </ErrorText>
+            ) : null
+          ) : null}
           <AuthButton
             text="Edit Account"
             disabled={

@@ -4,7 +4,13 @@ import AuthLayout from "../components/auth/AuthLayout";
 import { TextInput } from "../components/auth/AythShared";
 import { useForm } from "react-hook-form";
 import { gql, useMutation } from "@apollo/client";
-import { Alert } from "react-native";
+import { Alert, Text } from "react-native";
+import styled from "styled-components";
+
+const ErrorText = styled.Text`
+  color: tomato;
+  margin: 0 10px 10px 10px;
+`;
 
 const CREATE_ACCOUNT_MUTATION = gql`
   mutation createAccount(
@@ -28,7 +34,14 @@ const CREATE_ACCOUNT_MUTATION = gql`
 `;
 
 const CreateAccount = ({ navigation }) => {
-  const { register, handleSubmit, setValue, watch, getValues } = useForm();
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    getValues,
+    formState: { errors },
+  } = useForm({ mode: "all" });
   const onCompleted = ({ createAccount }) => {
     const { ok, error } = createAccount;
     const { username, password } = getValues();
@@ -59,16 +72,19 @@ const CreateAccount = ({ navigation }) => {
       });
     }
   };
+
   const [createAccountMutation, { loading }] = useMutation(
     CREATE_ACCOUNT_MUTATION,
     { onCompleted }
   );
   useEffect(() => {
-    register("firstName", { requrired: true });
+    register("firstName", {
+      requrired: true,
+    });
     register("lastName", { requrired: true });
-    register("username", { requrired: true });
+    register("username", { requrired: true, minLength: 3 });
     register("email", { requrired: true });
-    register("password", { requrired: true });
+    register("password", { requrired: true, minLength: 8 });
   }, [register]);
 
   return (
@@ -76,6 +92,7 @@ const CreateAccount = ({ navigation }) => {
       <TextInput
         autoFocus
         placeholder="First Name"
+        maxLength={10}
         returnKeyType="next"
         onSubmitEditing={() => onNext(lastNameRef)}
         blurOnSubmit={false}
@@ -86,6 +103,7 @@ const CreateAccount = ({ navigation }) => {
         placeholder="Last Name"
         ref={lastNameRef}
         returnKeyType="next"
+        maxLength={10}
         onSubmitEditing={() => onNext(usernameRef)}
         blurOnSubmit={false}
         placeholderTextColor={"rgba(255,255,255,0.5)"}
@@ -94,6 +112,7 @@ const CreateAccount = ({ navigation }) => {
       <TextInput
         placeholder="Username"
         ref={usernameRef}
+        maxLength={10}
         autoCapitalize="none"
         returnKeyType="next"
         onSubmitEditing={() => onNext(emailRef)}
@@ -101,6 +120,12 @@ const CreateAccount = ({ navigation }) => {
         placeholderTextColor={"rgba(255,255,255,0.5)"}
         onChangeText={(text) => setValue("username", text)}
       />
+      {watch("username") ? (
+        watch("username")?.length < 3 ? (
+          <ErrorText>Username must be more than 2 characters</ErrorText>
+        ) : null
+      ) : null}
+
       <TextInput
         placeholder="Email"
         ref={emailRef}
@@ -112,6 +137,14 @@ const CreateAccount = ({ navigation }) => {
         placeholderTextColor={"rgba(255,255,255,0.5)"}
         onChangeText={(text) => setValue("email", text)}
       />
+      {watch("email") ? (
+        !/^[a-zA-Z0-9_.-]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/.test(
+          watch("email")
+        ) ? (
+          <ErrorText>Email must be email type</ErrorText>
+        ) : null
+      ) : null}
+
       <TextInput
         placeholder="Password"
         ref={passwordRef}
@@ -123,6 +156,16 @@ const CreateAccount = ({ navigation }) => {
         onChangeText={(text) => setValue("password", text)}
         onSubmitEditing={handleSubmit(onValid)}
       />
+      {watch("password") ? (
+        !/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d#?!@$%^&*-]{8,}$/.test(
+          watch("password")
+        ) ? (
+          <ErrorText>
+            Password must be more than 7 characters, at least one letter and one
+            number
+          </ErrorText>
+        ) : null
+      ) : null}
       <AuthButton
         text="Create Account"
         disabled={
